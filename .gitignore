@@ -1,0 +1,8 @@
+.git/
+build/
+
+# Personal build-helpers.
+.targets
+.target.sh
+
+compile_commands.json
