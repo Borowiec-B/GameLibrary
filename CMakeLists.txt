@@ -5,8 +5,8 @@ project(GameLibrary)
 
 set(main_target GameLibrary)
 
+set(include_dir	"${CMAKE_SOURCE_DIR}/include/")
 set(source_dir "${CMAKE_SOURCE_DIR}/src/")
-set(include_dir "${CMAKE_SOURCE_DIR}/include/")
 set(source_files "${CMAKE_SOURCE_DIR}/src/GameLibrary/main.cpp")
 
 
