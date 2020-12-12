@@ -17,3 +17,15 @@ set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
 												CXX_EXTENSIONS FALSE
 )
 
+
+# Perform all tests after build, abort producing the library on failure.
+#
+# CMakeLists.txt executed by "add_subdirectory()" creates test targets and sets "test_target".
+# Executables for testing are placed in "${CMAKE_BINARY_DIR}/test/".
+add_subdirectory("${CMAKE_SOURCE_DIR}/test/")
+add_custom_command(	TARGET				${main_target}
+					COMMAND				"${test_target}"
+					COMMENT				"Run all tests."
+					WORKING_DIRECTORY	"test/"
+					POST_BUILD
+)

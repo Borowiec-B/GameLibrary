@@ -4,6 +4,7 @@ project(GameLibraryTest LANGUAGES CXX)
 
 
 set(test_target GameLibraryTest)
+set(test_target ${test_target} PARENT_SCOPE)
 
 
 find_package(Catch2 REQUIRED)
