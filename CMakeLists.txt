@@ -12,7 +12,7 @@ set(source_files	"${CMAKE_SOURCE_DIR}/src/GameLibrary/main.cpp")
 
 add_library(${main_target} STATIC ${source_files})
 
-set_target_properties(${main_target} PROPERTIES CXX_STANDARD 20
+set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
 									 			CXX_STANDARD_REQUIRED TRUE
 												CXX_EXTENSIONS FALSE
 )
