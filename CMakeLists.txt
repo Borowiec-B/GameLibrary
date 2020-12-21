@@ -7,10 +7,10 @@ include("${CMAKE_SOURCE_DIR}/cmake/utilities.cmake")
 
 set(main_target		GameLibrary)
 
-set(include_dir	"${CMAKE_SOURCE_DIR}/include/")
-set(source_dir	"${CMAKE_SOURCE_DIR}/src/")
+set(include_dir	"${CMAKE_SOURCE_DIR}/include")
+set(source_dir	"${CMAKE_SOURCE_DIR}/src")
 
-append_prefixed_items_to_list("${source_dir}GameLibrary/" source_files main.cpp)
+append_prefixed_items_to_list("${source_dir}/GameLibrary/" source_files main.cpp)
 
 
 add_library(${main_target} STATIC ${source_files})
