@@ -5,7 +5,7 @@ project(GameLibrary)
 include("${CMAKE_SOURCE_DIR}/cmake/utilities.cmake")
 
 
-set(main_target		GameLibrary)
+set(main_target	GameLibrary)
 
 set(include_dir	"${CMAKE_SOURCE_DIR}/include")
 set(source_dir	"${CMAKE_SOURCE_DIR}/src")

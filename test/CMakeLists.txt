@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 include("${CMAKE_SOURCE_DIR}/cmake/utilities.cmake")
 
+
 set(test_target GameLibraryTest)
 set(test_target ${test_target} PARENT_SCOPE)
 set(test_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
