@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(GameLibraryTest LANGUAGES CXX)
-
 
 set(test_target GameLibraryTest)
 set(test_target ${test_target} PARENT_SCOPE)
