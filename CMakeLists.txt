@@ -20,6 +20,9 @@ set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
 												CXX_EXTENSIONS FALSE
 )
 
+# ./src/ may contain headers for internal usage.
+target_include_directories(${main_target} PUBLIC ${include_dir} PRIVATE {source_dir})
+
 
 # Perform all tests after build, abort producing the library on failure.
 #

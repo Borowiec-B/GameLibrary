@@ -19,6 +19,8 @@ set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
 												CXX_EXTENSIONS FALSE
 )
 
+target_include_directories(${test_target} PRIVATE ${include_dir})
+
 target_link_libraries(${test_target} PRIVATE Catch2::Catch2)
 
 include(CTest)
