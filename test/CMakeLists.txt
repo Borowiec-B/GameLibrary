@@ -27,3 +27,10 @@ include(CTest)
 include(Catch)
 
 catch_discover_tests(${test_target})
+
+add_custom_target(	RunAllTests
+					ALL
+					COMMAND				"${test_target}"
+					COMMENT				"Run all tests."
+					DEPENDS				"${test_target}"
+)

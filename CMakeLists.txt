@@ -24,14 +24,7 @@ set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
 target_include_directories(${main_target} PUBLIC ${include_dir} PRIVATE {source_dir})
 
 
-# Perform all tests after build, abort producing the library on failure.
+# This will always perform all tests after build.
 #
-# CMakeLists.txt executed by "add_subdirectory()" creates test targets and sets "test_target".
 # Executables for testing are placed in "${CMAKE_BINARY_DIR}/test/".
 add_subdirectory("${CMAKE_SOURCE_DIR}/test/")
-add_custom_command(	TARGET				${main_target}
-					COMMAND				"${test_target}"
-					COMMENT				"Run all tests."
-					WORKING_DIRECTORY	"test/"
-					POST_BUILD
-)
