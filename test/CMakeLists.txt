@@ -32,3 +32,4 @@ add_custom_target(	RunAllTests
 					COMMENT				"Run all tests."
 					DEPENDS				"${test_target}"
 )
+

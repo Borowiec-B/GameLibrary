@@ -9,3 +9,4 @@ function(append_prefixed_items_to_list prefix out)
 
 	set(${out} ${new_out} PARENT_SCOPE)
 endfunction()
+

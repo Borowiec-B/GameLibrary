@@ -28,3 +28,4 @@ target_include_directories(${main_target} PUBLIC ${include_dir} PRIVATE {source_
 #
 # Executables for testing are placed in "${CMAKE_BINARY_DIR}/test/".
 add_subdirectory("${CMAKE_SOURCE_DIR}/test/")
+
