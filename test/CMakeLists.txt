@@ -14,7 +14,7 @@ find_package(Catch2 REQUIRED)
 
 add_executable(${test_target} ${test_source_files})
 
-set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
+set_target_properties(${test_target} PROPERTIES CXX_STANDARD 17
 									 			CXX_STANDARD_REQUIRED TRUE
 												CXX_EXTENSIONS FALSE
 )
