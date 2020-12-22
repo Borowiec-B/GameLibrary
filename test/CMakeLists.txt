@@ -13,6 +13,12 @@ append_prefixed_items_to_list("${test_source_dir}/" test_source_files main.cpp)
 find_package(Catch2 REQUIRED)
 
 add_executable(${test_target} ${test_source_files})
+
+set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
+									 			CXX_STANDARD_REQUIRED TRUE
+												CXX_EXTENSIONS FALSE
+)
+
 target_link_libraries(${test_target} PRIVATE Catch2::Catch2)
 
 include(CTest)
