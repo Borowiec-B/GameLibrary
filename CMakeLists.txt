@@ -13,6 +13,7 @@ set(include_dir	"${CMAKE_SOURCE_DIR}/include")
 set(source_dir	"${CMAKE_SOURCE_DIR}/src")
 
 append_prefixed_items_to_list("${source_dir}/GameLibrary/" source_files main.cpp)
+append_prefixed_items_to_list("${source_dir}/GameLibrary/Console/" source_files Cvar.cpp)
 
 
 add_library(${main_target} STATIC ${source_files})
