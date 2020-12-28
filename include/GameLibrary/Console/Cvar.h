@@ -17,7 +17,7 @@ namespace GameLibrary
 		 * Cvar: GameLibrary's safe, interactive variable.
 		 *
 		 * Currently planned support for:
-		 *   - Double, Integer, String types of Cvars.
+		 *   - Float, Integer, String types of Cvars.
 		 *   - Callbacks.
 		 *	 - Limits.
 		 */
@@ -87,7 +87,7 @@ namespace GameLibrary
 
 		public:
 			enum class ValueType {
-				Double,
+				Float,
 				Integer,
 				String
 			};
