@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <iomanip>
 #include <limits>
 #include <memory>
@@ -49,7 +50,9 @@ namespace GameLibrary
 				template<typename T>
 				void set(T&& newValue) {
 					// To do: Implement rest of the cases.
-					if (auto p = dynamic_cast<StringValue*>(this))
+					if (auto p = dynamic_cast<FloatValue*>(this))
+						p->set(std::forward<T>(newValue));
+					else if (auto p = dynamic_cast<StringValue*>(this))
 						p->set(std::forward<T>(newValue));
 				}
 
@@ -57,6 +60,47 @@ namespace GameLibrary
 			     *  getAsString: Return value's string representation regardless of its type.
 			     */
 				virtual std::string getAsString() const = 0;
+			};
+
+			/*
+			 *  FloatValue: Set of functions for interacting with a floating-point Cvar value.
+			 */
+			class FloatValue : public Value
+			{
+				using ValueType = long double;
+			public:
+				template<typename T>
+				FloatValue(T&& initialValue) {
+					set(std::forward<T>(initialValue));
+				}
+
+				template<typename T>
+				void set(T&& newValue) {
+					if constexpr (std::is_convertible_v<T, ValueType>)
+					{
+						_value = std::forward<T>(newValue);
+					}
+					// std::sto* functions can accept const std::string& and const std::wstring&.
+					// Use std::stold (at least as long as ValueType is compatible) if supplied argument can be used with it.
+					else if constexpr (std::is_convertible_v<decltype(std::forward<T>(newValue)), const std::string&> ||
+									   std::is_convertible_v<decltype(std::forward<T>(newValue)), const std::wstring&>)
+					{
+						try
+						{
+							_value = std::stold(std::forward<T>(newValue));
+						}
+						catch (std::exception&)
+						{
+							// Unsuccessful setter calls aren't supposed to do anything special yet.
+							// To do: Consider throwing exceptions after all.
+						}
+					}
+				}
+
+				std::string getAsString() const override;
+
+			private:
+				ValueType _value;
 			};
 
 			/*
@@ -105,6 +149,9 @@ namespace GameLibrary
 				switch (valueType)
 				{
 					// To do: implement actions for the rest of the types.
+					case ValueType::Float:
+						_value = std::make_unique<FloatValue>(std::forward<T>(initialValue));
+						break;
 					case ValueType::String:
 						_value = std::make_unique<StringValue>(std::forward<T>(initialValue));
 						break;
