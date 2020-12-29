@@ -54,7 +54,7 @@ TEST_CASE("Cvar sets and returns the correct value, free of unhandled errors in 
 			REQUIRE(c.getAsString() == "-0");
 		}
 
-		SECTION("Other arguments (fallback values aren't implemented yet - just don't throw and keep the existing value")
+		SECTION("Incompatible arguments (fallback values aren't implemented yet - just don't throw and keep the existing value")
 		{
 			Cvar c(Cvar::ValueType::String, "initial_value");
 
