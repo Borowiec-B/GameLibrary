@@ -81,7 +81,7 @@ namespace GameLibrary
 
 						_value = std::move(stringConversionStream.str());
 					}
-					else if constexpr (std::is_convertible_v<decltype(newValue), std::string>)
+					else if constexpr (std::is_convertible_v<decltype(std::forward<T>(newValue)), std::string>)
 					{
 						_value = std::forward<T>(newValue);
 					}
