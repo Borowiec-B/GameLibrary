@@ -33,6 +33,10 @@ TEST_CASE("Cvar sets and returns the correct value, free of unhandled errors in 
 
 			c.setValue(-200);
 			REQUIRE(c.getAsString() == "-200");
+
+			// There's no negative zero integer, store it as plain 0.
+			c.setValue(-0);
+			REQUIRE(c.getAsString() == "0");
 		}
 
 		SECTION("Floating-point arguments (trailing zeros are to be removed in String representation)")
@@ -46,10 +50,8 @@ TEST_CASE("Cvar sets and returns the correct value, free of unhandled errors in 
 			c.setValue(-2.71830000001);
 			REQUIRE(c.getAsString() == "-2.71830000001");
 
-			// -0 is expected to set Cvar's value to 0 right now.
-			// Maybe I'll change it later, can't see too much of a point now.
-			c.setValue(-0);
-			REQUIRE(c.getAsString() == "0");
+			c.setValue(-0.0);
+			REQUIRE(c.getAsString() == "-0");
 		}
 
 		SECTION("Other arguments (fallback values aren't implemented yet - just don't throw and keep the existing value")
