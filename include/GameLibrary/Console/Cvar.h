@@ -53,6 +53,8 @@ namespace GameLibrary
 					// To do: Implement rest of the cases.
 					if (auto p = dynamic_cast<FloatValue*>(this))
 						p->set(std::forward<T>(newValue));
+					else if (auto p = dynamic_cast<IntegerValue*>(this))
+						p->set(std::forward<T>(newValue));
 					else if (auto p = dynamic_cast<StringValue*>(this))
 						p->set(std::forward<T>(newValue));
 				}
@@ -105,6 +107,53 @@ namespace GameLibrary
 			};
 
 			/*
+			 *  IntegerValue: Set of functions for interacting with an integral Cvar value.
+			 */
+			class IntegerValue : public Value
+			{
+				using ValueType = long long;
+			public:
+				template<typename T>
+				IntegerValue(T&& initialValue) {
+					set(std::forward<T>(initialValue));
+				}
+
+				// set: Round the value and assign as integer.
+				template<typename T>
+				void set(T&& newValue) {
+					if constexpr (std::is_integral_v<T>)
+					{
+						_value = std::forward<T>(newValue);
+					}
+					else if constexpr (std::is_floating_point_v<T>)
+					{
+						_value = std::llroundl(newValue);
+					}
+					// std::sto* functions can accept const std::string& and const std::wstring&.
+					// Use std::stold (at least as long as ValueType is compatible) to convert string to an arithmetic type,
+					// then round it up and assign.
+					else if constexpr (std::is_convertible_v<decltype(std::forward<T>(newValue)), const std::string&> ||
+									   std::is_convertible_v<decltype(std::forward<T>(newValue)), const std::wstring&>)
+					{
+						try
+						{
+							const long double unroundedNewValue = std::stold(std::forward<T>(newValue));
+							_value = std::llroundl(unroundedNewValue);
+						}
+						catch (std::exception&)
+						{
+							// Unsuccessful setter calls aren't supposed to do anything special yet.
+							// To do: Consider throwing exceptions after all.
+						}
+					}
+				}
+
+				std::string getAsString() const override;
+
+			private:
+				ValueType _value;
+			};
+			/*
 			 *  StringValue: Set of functions for interacting with a String Cvar value.
 			 *
 			 *  To do:
@@ -155,6 +204,9 @@ namespace GameLibrary
 					// To do: implement actions for the rest of the types.
 					case ValueType::Float:
 						_value = std::make_unique<FloatValue>(std::forward<T>(initialValue));
+						break;
+					case ValueType::Integer:
+						_value = std::make_unique<IntegerValue>(std::forward<T>(initialValue));
 						break;
 					case ValueType::String:
 						_value = std::make_unique<StringValue>(std::forward<T>(initialValue));
