@@ -20,6 +20,12 @@ namespace GameLibrary
 		 *   - Float, Integer, String types of Cvars.
 		 *   - Callbacks.
 		 *	 - Limits.
+		 *
+		 * To do:
+		 *   - Consider changing my mind on throwing exceptions on unsuccessful value assign attempts (meaning, start throwing).
+		 *   - Allow registering callbacks called on various events.
+		 *   - Add flags (cheat-protection, etc.).
+		 *   - Add limits.
 		 */
 		class Cvar
 		{
@@ -32,6 +38,8 @@ namespace GameLibrary
 			 *
 			 *  As a workaround for C++17 not featuring virtual function templates, template functions will
 			 *  dynamically check which derived class 'this' is, and call the appropriate derived class's method.
+			 *
+			 *  To do: Consider moving constructors from derived classes to Value.
 			 */
 			class Value
 			{
