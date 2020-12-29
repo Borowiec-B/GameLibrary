@@ -27,6 +27,7 @@ namespace GameLibrary
 		 *   - Allow registering callbacks called on various events.
 		 *   - Add flags (cheat-protection, etc.).
 		 *   - Add limits.
+		 *	 - Clean this file up (refactor functions and format multi-line sentences in comments).
 		 */
 		class Cvar
 		{
@@ -105,6 +106,9 @@ namespace GameLibrary
 
 			/*
 			 *  StringValue: Set of functions for interacting with a String Cvar value.
+			 *
+			 *  To do:
+			 *    - Move _value's type to ValueType.
 			 */
 			class StringValue : public Value
 			{
