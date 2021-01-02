@@ -1,7 +1,5 @@
 #include "GameLibrary/Console/Cvar.h"
 
-#include <vector>
-
 #include "catch2/catch.hpp"
 
 using namespace GameLibrary::Console;
