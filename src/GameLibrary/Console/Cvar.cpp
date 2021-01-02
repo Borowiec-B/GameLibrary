@@ -4,7 +4,10 @@
 #include <sstream>
 #include <string>
 
+#include "GameLibrary/Utilities/Conversions/String.h"
+
 using namespace GameLibrary::Console;
+using namespace GameLibrary::Utilities;
 
 
 std::string Cvar::getAsString() const {
@@ -12,15 +15,11 @@ std::string Cvar::getAsString() const {
 }
 
 std::string Cvar::FloatValue::getAsString() const {
-	std::stringstream stringConversionStream;
-
-	stringConversionStream << std::setprecision(std::numeric_limits<decltype(_value)>::digits10) << _value;
-
-	return stringConversionStream.str();
+	return Conversions::toString(_value, Conversions::FloatPrecisionPreset::Normal);
 }
 
 std::string Cvar::IntegerValue::getAsString() const {
-	return std::to_string(_value);
+	return Conversions::toString(_value);
 }
 
 std::string Cvar::StringValue::getAsString() const {
