@@ -1,0 +1,112 @@
+#pragma once
+
+#include <limits>
+#include <iomanip>
+#include <sstream>
+#include <string>
+#include <type_traits>
+#include <variant>
+
+#include "GameLibrary/Exceptions/StandardExceptions.h"
+
+
+namespace GameLibrary::Utilities::Conversions
+{
+	/*
+	 *  FloatPrecision: Used to specify desired precision when converting floats to strings.
+	 *  				Results will be rounded.
+	 *  
+	 *  Normal uses std::numeric_limits<T>::digits10 and std::noshowpoint.
+	 *  Max uses std::numeric_limits<T>::max_digits10.
+	 */
+	enum class FloatPrecisionPreset {
+		Normal,
+		Max
+	};
+	using FloatPrecision = std::variant<int, FloatPrecisionPreset>;
+
+	/*
+	 *  stringToStringStream family: Construct a Stringstream based on String's member types.
+	 */
+	template<typename String>
+	auto stringToStringstream() {
+		return std::basic_stringstream<typename String::value_type, typename String::traits_type, typename String::allocator_type>();
+	}
+
+	template<typename String>
+	auto stringToIstringstream() {
+		return std::basic_istringstream<typename String::value_type, typename String::traits_type, typename String::allocator_type>();
+	}
+
+	template<typename String>
+	auto stringToOstringstream() {
+		return std::basic_ostringstream<typename String::value_type, typename String::traits_type, typename String::allocator_type>();
+	}
+
+	/*
+	 *  stringstreamCast: Pass all stringstreamFlags... to a Stringstream, then value, then return resulting .str().
+	 */
+	template<typename String = std::string, typename T, typename... StringstreamFlags>
+	String stringstreamCast(T&& value, StringstreamFlags&&... stringstreamFlags) {
+		auto conversionStream = stringToOstringstream<String>();
+
+		(conversionStream << ... << std::forward<StringstreamFlags>(stringstreamFlags)) << std::forward<T>(value);
+
+		return conversionStream.str();
+	}
+
+	/*
+	 *  floatPrecisionToInt: FloatPrecision can contain either FloatPrecisionPreset or int. Convert it to int.
+	 *
+	 *  Throws:
+	 *    - InvalidArgument when floatPrecision contains a negative number or unhandled FloatPrecisionPreset.
+	 */
+	template<typename F>
+	int floatPrecisionToInt(const FloatPrecision& floatPrecision) {
+		int ret;
+
+		if (std::holds_alternative<FloatPrecisionPreset>(floatPrecision))
+		{
+			const auto precisionPreset = std::get<FloatPrecisionPreset>(floatPrecision);
+			switch (precisionPreset)
+			{
+				case FloatPrecisionPreset::Normal:
+					ret = std::numeric_limits<F>::digits10;
+					break;
+				case FloatPrecisionPreset::Max:
+					ret = std::numeric_limits<F>::max_digits10;
+					break;
+				default:
+					throw Exceptions::InvalidArgument("Used an unimplemented FloatPrecisionPreset.");
+					break;
+			}
+		}
+		else if (std::holds_alternative<int>(floatPrecision))
+		{
+			const int storedPrecision = std::get<int>(floatPrecision);
+			if (storedPrecision < 0)
+				throw Exceptions::InvalidArgument("Attempted to set negative float precision.");
+
+			ret = storedPrecision;
+		}
+
+		return ret;
+	}
+
+	template<typename String = std::string, typename F>
+	std::enable_if_t<std::is_floating_point_v<F>, String>
+	floatToString(F value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
+		const int precision = floatPrecisionToInt<F>(floatPrecision);
+
+		return stringstreamCast<String>(value, std::setprecision(precision));
+	}
+
+	template<typename String = std::string, typename T>
+	String toString(T&& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
+		if constexpr(std::is_floating_point_v<std::decay_t<T>>)
+			return floatToString<String>(value, floatPrecision);
+		else
+			return stringstreamCast<String>(std::forward<T>(value));
+	}
+}
+

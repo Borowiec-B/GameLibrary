@@ -1,0 +1,36 @@
+#include "GameLibrary/Utilities/Conversions/String.h"
+
+#include <cmath>
+#include <limits>
+#include <vector>
+
+#include "catch2/catch.hpp"
+
+using namespace GameLibrary::Utilities::Conversions;
+
+
+TEST_CASE("String conversion functions return expected values.")
+{
+	SECTION("To string.")
+	{
+		REQUIRE(toString("string") == "string");
+		REQUIRE(toString("") == "");
+
+		// Integer -0 doesn't store negative sign in two-complement's representation.
+		REQUIRE(toString(0) == "0");
+		REQUIRE(toString(-0) == "0");
+
+		REQUIRE(toString(0.123456789) == "0.123456789");
+		REQUIRE(toString(-4321.1234) == "-4321.1234");
+		REQUIRE(toString(10.123456789, 6) == "10.1235");
+		REQUIRE(toString(-10.123456789, 6) == "-10.1235");
+
+		const std::vector<long double> doubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
+											 	   -std::numeric_limits<long double>::min(), 0.0 };
+
+		for (const auto& d : doubles) {
+			const auto s = toString(d, FloatPrecisionPreset::Max);
+			REQUIRE(std::stold(s) == d);
+		}
+	}
+}
