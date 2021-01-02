@@ -9,6 +9,8 @@
 #include <string_view>
 #include <type_traits>
 
+#include "GameLibrary/Utilities/Conversions/String.h"
+
 
 namespace GameLibrary
 {
@@ -168,19 +170,7 @@ namespace GameLibrary
 
 				template<typename T>
 				void set(T&& newValue) {
-					if constexpr (std::is_arithmetic_v<T>)
-					{
-						std::stringstream stringConversionStream;
-
-						// Don't keep unnecessary zeros / super-precise digits in the string.
-						stringConversionStream << std::setprecision(std::numeric_limits<T>::digits10) << std::forward<T>(newValue);
-
-						_value = std::move(stringConversionStream.str());
-					}
-					else if constexpr (std::is_convertible_v<decltype(std::forward<T>(newValue)), std::string>)
-					{
-						_value = std::forward<T>(newValue);
-					}
+					_value = Utilities::Conversions::toString(std::forward<T>(newValue));
 				}
 
 				std::string getAsString() const override;
