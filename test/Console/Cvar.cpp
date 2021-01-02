@@ -49,15 +49,6 @@ TEST_CASE("Cvar sets and returns the correct value, free of unhandled errors in 
 			c.setValue(-0.0);
 			REQUIRE(c.getAsString() == "-0");
 		}
-
-		SECTION("Incompatible arguments (fallback values aren't implemented yet - just don't throw and keep the existing value")
-		{
-			Cvar c(Cvar::ValueType::Float, 0);
-
-			REQUIRE_NOTHROW(c.setValue(std::vector<int>()));
-
-			REQUIRE(c.getAsString() == "0");
-		}
 	}
 
 	SECTION("Integer Cvar - values should always be rounded.")
@@ -96,14 +87,6 @@ TEST_CASE("Cvar sets and returns the correct value, free of unhandled errors in 
 
 			c.setValue(-100000);
 			REQUIRE(c.getAsString() == "-100000");
-		}
-
-		SECTION("Incompatible arguments (fallback values aren't implemented yet - just don't throw and keep the existing value")
-		{
-			Cvar c(Cvar::ValueType::Integer, 1);
-
-			REQUIRE_NOTHROW(c.setValue(std::vector<int>()));
-			REQUIRE(c.getAsString() == "1");
 		}
 	}
 
@@ -150,16 +133,6 @@ TEST_CASE("Cvar sets and returns the correct value, free of unhandled errors in 
 
 			c.setValue(-0.0);
 			REQUIRE(c.getAsString() == "-0");
-		}
-
-		SECTION("Incompatible arguments (fallback values aren't implemented yet - just don't throw and keep the existing value")
-		{
-			Cvar c(Cvar::ValueType::String, "initial_value");
-
-			std::vector<int> vec { 1, 2, 3 };
-			REQUIRE_NOTHROW(c.setValue(std::move(vec)));
-
-			REQUIRE(c.getAsString() == "initial_value");
 		}
 	}
 }
