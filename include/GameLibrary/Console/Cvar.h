@@ -50,7 +50,6 @@ namespace GameLibrary
 
 				template<typename T>
 				void set(T&& newValue) {
-					// To do: Implement rest of the cases.
 					if (auto p = dynamic_cast<FloatValue*>(this))
 						p->set(std::forward<T>(newValue));
 					else if (auto p = dynamic_cast<IntegerValue*>(this))
