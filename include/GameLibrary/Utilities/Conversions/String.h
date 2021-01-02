@@ -62,7 +62,7 @@ namespace GameLibrary::Utilities::Conversions
 	 *    - InvalidArgument when floatPrecision contains a negative number or unhandled FloatPrecisionPreset.
 	 */
 	template<typename F>
-	int floatPrecisionToInt(const FloatPrecision& floatPrecision) {
+	std::enable_if_t<std::is_floating_point_v<F>, int> floatPrecisionToInt(const FloatPrecision& floatPrecision) {
 		int ret;
 
 		if (std::holds_alternative<FloatPrecisionPreset>(floatPrecision))
