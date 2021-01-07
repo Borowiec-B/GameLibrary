@@ -14,6 +14,7 @@ set(source_dir	"${CMAKE_SOURCE_DIR}/src")
 
 append_prefixed_items_to_list("${source_dir}/GameLibrary/" source_files main.cpp)
 append_prefixed_items_to_list("${source_dir}/GameLibrary/Console/" source_files Cvar.cpp)
+append_prefixed_items_to_list("${source_dir}/GameLibrary/Utilities/" source_files String.cpp)
 
 
 add_library(${main_target} STATIC ${source_files})

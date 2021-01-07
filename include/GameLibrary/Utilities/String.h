@@ -29,11 +29,6 @@ namespace GameLibrary::Utilities
 		return surround(str, '"');
 	}
 
-	std::string quote(const char* const str) {
-		return surround<std::string>(str, '"');
-	}
-
-	std::wstring quote(const wchar_t* const str) {
-		return surround<std::wstring>(str, L'"');
-	}
+	std::string quote(const char* const str);
+	std::wstring quote(const wchar_t* const str);
 }
