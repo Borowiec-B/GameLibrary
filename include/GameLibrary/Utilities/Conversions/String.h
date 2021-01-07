@@ -7,8 +7,8 @@
 #include <type_traits>
 #include <variant>
 
-#include "GameLibrary/Exceptions/StandardExceptions.h"
 
+#include "GameLibrary/Exceptions/Standard.h"
 #include "GameLibrary/Utilities/Conversions/StringToSstream.h"
 
 namespace GameLibrary::Utilities::Conversions
