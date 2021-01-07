@@ -23,4 +23,17 @@ namespace GameLibrary::Utilities
 	std::wstring surround(const wchar_t* const str, const S2& surrounder) {
 		return surround<std::wstring, S2>(str, surrounder);
 	}
+
+	template<typename S>
+	S quote(const S& str) {
+		return surround(str, '"');
+	}
+
+	std::string quote(const char* const str) {
+		return surround<std::string>(str, '"');
+	}
+
+	std::wstring quote(const wchar_t* const str) {
+		return surround<std::wstring>(str, L'"');
+	}
 }

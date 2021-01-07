@@ -33,3 +33,11 @@ TEST_CASE("Surround works with std::string, std::wstring, and their literals (no
 		REQUIRE(surround(L"a", L"b") == L"bab");
 	}
 }
+
+TEST_CASE("Quote matches behavior of surround() with quotation mark argument.")
+{
+	REQUIRE(quote("str") == surround("str", '"'));
+	REQUIRE(quote(L"str") == surround(L"str", L'"'));
+	REQUIRE(quote("") == surround("", '"'));
+	REQUIRE(quote(L"") == surround(L"", L'"'));
+}
