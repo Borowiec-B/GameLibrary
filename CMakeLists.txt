@@ -6,6 +6,7 @@ project(GameLibrary VERSION ${version} LANGUAGES CXX)
 
 include("${CMAKE_SOURCE_DIR}/cmake/utilities.cmake")
 
+find_package(Boost REQUIRED)
 
 set(main_target	GameLibrary)
 
@@ -25,7 +26,7 @@ set_target_properties(${main_target} PROPERTIES CXX_STANDARD 17
 )
 
 # ./src/ may contain headers for internal usage.
-target_include_directories(${main_target} PUBLIC ${include_dir} PRIVATE {source_dir})
+target_include_directories(${main_target} PUBLIC ${include_dir} PRIVATE {source_dir} PUBLIC ${Boost_INCLUDE_DIRS})
 
 
 # This will always perform all tests after build.
