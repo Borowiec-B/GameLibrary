@@ -5,6 +5,7 @@
 
 #include "boost/type_index.hpp"
 
+#include "GameLibrary/Utilities/String.h"
 
 
 namespace GameLibrary::Exceptions
@@ -29,7 +30,7 @@ namespace GameLibrary::Exceptions
 			const auto prettyFrom = boost::typeindex::type_id<From>().pretty_name();
 			const auto prettyTo = boost::typeindex::type_id<To>().pretty_name();
 
-			return "From: \"" + prettyFrom + "\" To: \"" + prettyTo + "\"";
+			return "From: " + Utilities::quote(prettyFrom) + " To: " + Utilities::quote(prettyTo);
 		}
 
 		template<typename From, typename To>
@@ -38,7 +39,7 @@ namespace GameLibrary::Exceptions
 			ret += types<From, To>();
 
 			if (message.has_value())
-				ret += "\nMessage: \"" + std::move(message.value()) + "\".";
+				ret += "\nMessage: " + Utilities::quote(std::move(message.value())) + ".";
 
 			return ret;
 		}
