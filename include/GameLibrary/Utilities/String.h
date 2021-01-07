@@ -13,4 +13,14 @@ namespace GameLibrary::Utilities
 
 		return stream.str();
 	}
+
+	template<typename S2>
+	std::string surround(const char* const str, const S2& surrounder) {
+		return surround<std::string, S2>(str, surrounder);
+	}
+
+	template<typename S2>
+	std::wstring surround(const wchar_t* const str, const S2& surrounder) {
+		return surround<std::wstring, S2>(str, surrounder);
+	}
 }
