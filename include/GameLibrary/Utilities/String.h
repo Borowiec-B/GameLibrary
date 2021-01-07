@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameLibrary/Utilities/Conversions/String.h"
+#include "GameLibrary/Utilities/Conversions/StringToSstream.h"
 
 
 namespace GameLibrary::Utilities
