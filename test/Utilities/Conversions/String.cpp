@@ -50,15 +50,18 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 
 		SECTION("From Float")
 		{
+			// Default precision
 			REQUIRE(toString(0.123456789) == "0.123456789");
 			REQUIRE(toString<std::wstring>(-4321.1234) == L"-4321.1234");
+
+			// Precision: 6
 			REQUIRE(toString(10.123456789, 6) == "10.1235");
 			REQUIRE(toString<std::wstring>(-10.123456789, 6) == L"-10.1235");
 
+			// Require that FloatPrecisionPreset::Max guarantees to keep exact same value Float->String->Float.
 			const std::vector<long double> extremeDoubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
 															  -std::numeric_limits<long double>::min(), 0.0 };
 
-			// Require that FloatPrecisionPreset::Max guarantees to keep exact same value Float->String->Float.
 			for (const auto& d : extremeDoubles) {
 				const auto s = toString(d, FloatPrecisionPreset::Max);
 				REQUIRE(std::stold(s) == d);
@@ -66,8 +69,6 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 		}
 	}
 
-		const std::vector<long double> doubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
-											 	   -std::numeric_limits<long double>::min(), 0.0 };
 
 		for (const auto& d : doubles) {
 			const auto s = toString(d, FloatPrecisionPreset::Max);
