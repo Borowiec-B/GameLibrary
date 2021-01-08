@@ -34,17 +34,36 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 {
 	SECTION("To String")
 	{
-		REQUIRE(toString("string") == "string");
-		REQUIRE(toString<std::wstring>("") == L"");
+		SECTION("From String")
+		{
+			REQUIRE(toString("string") == "string");
+			REQUIRE(toString<std::wstring>("") == L"");
+		}
 
-		// Integer -0 doesn't store negative sign in two-complement's representation.
-		REQUIRE(toString(0) == "0");
-		REQUIRE(toString<std::wstring>(-0) == L"0");
+		SECTION("From Integer")
+		{
+			REQUIRE(toString(0) == "0");
+			constexpr unsigned int max_uint32 = 4294967295;
+			REQUIRE(toString(max_uint32) == "4294967295");
+		}
 
-		REQUIRE(toString(0.123456789) == "0.123456789");
-		REQUIRE(toString<std::wstring>(-4321.1234) == L"-4321.1234");
-		REQUIRE(toString(10.123456789, 6) == "10.1235");
-		REQUIRE(toString<std::wstring>(-10.123456789, 6) == L"-10.1235");
+		SECTION("From Float")
+		{
+			REQUIRE(toString(0.123456789) == "0.123456789");
+			REQUIRE(toString<std::wstring>(-4321.1234) == L"-4321.1234");
+			REQUIRE(toString(10.123456789, 6) == "10.1235");
+			REQUIRE(toString<std::wstring>(-10.123456789, 6) == L"-10.1235");
+
+			const std::vector<long double> extremeDoubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
+															  -std::numeric_limits<long double>::min(), 0.0 };
+
+			// Require that FloatPrecisionPreset::Max guarantees to keep exact same value Float->String->Float.
+			for (const auto& d : extremeDoubles) {
+				const auto s = toString(d, FloatPrecisionPreset::Max);
+				REQUIRE(std::stold(s) == d);
+			}
+		}
+	}
 
 		const std::vector<long double> doubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
 											 	   -std::numeric_limits<long double>::min(), 0.0 };
