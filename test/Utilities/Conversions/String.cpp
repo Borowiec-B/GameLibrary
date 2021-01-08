@@ -6,6 +6,8 @@
 
 #include "catch2/catch.hpp"
 
+#include "GameLibrary/Exceptions/Conversions.h"
+
 using namespace GameLibrary::Utilities::Conversions;
 
 
@@ -69,10 +71,22 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 		}
 	}
 
+	SECTION("From String")
+	{
+		SECTION("To Float")
+		{
+			constexpr auto lowestFloat = std::numeric_limits<float>::lowest();
+			constexpr auto minDouble = std::numeric_limits<double>::min();
+			constexpr auto maxLongDouble = std::numeric_limits<long double>::max();
 
-		for (const auto& d : doubles) {
-			const auto s = toString(d, FloatPrecisionPreset::Max);
-			REQUIRE(std::stold(s) == d);
+			REQUIRE(fromString<float>(toString(lowestFloat, FloatPrecisionPreset::Max)) == lowestFloat);
+			REQUIRE(fromString<double>(toString<std::wstring>(minDouble, FloatPrecisionPreset::Max)) == minDouble);
+			REQUIRE(fromString<long double>(toString(maxLongDouble, FloatPrecisionPreset::Max)) == maxLongDouble);
+			REQUIRE(fromString<long double>("100") == Approx(100));
+
+			REQUIRE_THROWS_AS(fromString<float>(L"invalid"), GameLibrary::Exceptions::ConversionError);
+			// Don't throw on imprecise conversions.
+			REQUIRE_NOTHROW(fromString<float>("1.1234567891111213141516171819"));
 		}
 	}
 }

@@ -7,7 +7,9 @@
 #include <type_traits>
 #include <variant>
 
+#include "boost/lexical_cast.hpp"
 
+#include "GameLibrary/Exceptions/Conversions.h"
 #include "GameLibrary/Exceptions/Standard.h"
 #include "GameLibrary/Utilities/Conversions/StringToSstream.h"
 
@@ -91,6 +93,25 @@ namespace GameLibrary::Utilities::Conversions
 			return floatToString<String>(value, floatPrecision);
 		else
 			return stringstreamCast<String>(std::forward<T>(value));
+	}
+
+	template<typename F, typename S>
+	F floatFromString(S&& str) {
+		try
+		{
+			// std::sto* functions throw on extreme values, so boost::lexical_cast is preferable for Float to Float.
+			return boost::lexical_cast<F>(std::forward<S>(str));
+		}
+		catch (const boost::bad_lexical_cast&)
+		{
+			throw Exceptions::ConversionError::fromTypes<S&&, F>();
+		}
+	}
+
+	template<typename T, typename S>
+	T fromString(S&& str) {
+		if constexpr (std::is_floating_point_v<T>)
+			return floatFromString<T>(std::forward<S>(str));
 	}
 }
 
