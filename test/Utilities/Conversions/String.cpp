@@ -21,21 +21,21 @@ TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns 
 	REQUIRE(stringstreamCast<std::wstring>(1.234, std::setprecision(5), std::fixed) ==  L"1.23400");
 }
 
-TEST_CASE("String conversion functions return expected values.")
+TEST_CASE("From/to String converters return expected values, operating on std::string/std::wstring.")
 {
-	SECTION("To string.")
+	SECTION("To String")
 	{
 		REQUIRE(toString("string") == "string");
-		REQUIRE(toString("") == "");
+		REQUIRE(toString<std::wstring>("") == L"");
 
 		// Integer -0 doesn't store negative sign in two-complement's representation.
 		REQUIRE(toString(0) == "0");
-		REQUIRE(toString(-0) == "0");
+		REQUIRE(toString<std::wstring>(-0) == L"0");
 
 		REQUIRE(toString(0.123456789) == "0.123456789");
-		REQUIRE(toString(-4321.1234) == "-4321.1234");
+		REQUIRE(toString<std::wstring>(-4321.1234) == L"-4321.1234");
 		REQUIRE(toString(10.123456789, 6) == "10.1235");
-		REQUIRE(toString(-10.123456789, 6) == "-10.1235");
+		REQUIRE(toString<std::wstring>(-10.123456789, 6) == L"-10.1235");
 
 		const std::vector<long double> doubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
 											 	   -std::numeric_limits<long double>::min(), 0.0 };
