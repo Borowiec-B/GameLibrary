@@ -8,6 +8,7 @@
 
 using namespace GameLibrary::Utilities::Conversions;
 
+
 TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns resulting std::string/std::wstring.")
 {
 	SECTION("Float to String")
