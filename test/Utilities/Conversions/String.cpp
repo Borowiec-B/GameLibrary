@@ -8,6 +8,18 @@
 
 using namespace GameLibrary::Utilities::Conversions;
 
+TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns resulting std::string/std::wstring.")
+{
+	REQUIRE(stringstreamCast(0) == "0");
+	REQUIRE(stringstreamCast<std::wstring>(1) == L"1");
+
+	REQUIRE(stringstreamCast("str") == "str");
+	REQUIRE(stringstreamCast<std::wstring>(L"wstr") == L"wstr");
+	REQUIRE(stringstreamCast<std::wstring>("str") == L"str");
+
+	REQUIRE(stringstreamCast(1.234, std::setprecision(5), std::fixed) ==  "1.23400");
+	REQUIRE(stringstreamCast<std::wstring>(1.234, std::setprecision(5), std::fixed) ==  L"1.23400");
+}
 
 TEST_CASE("String conversion functions return expected values.")
 {
