@@ -33,10 +33,10 @@ namespace GameLibrary::Utilities::Conversions
 	 *  stringstreamCast: Pass all stringstreamFlags... to a Stringstream, then value, then return resulting .str().
 	 */
 	template<typename String = std::string, typename T, typename... StringstreamFlags>
-	String stringstreamCast(T&& value, StringstreamFlags&&... stringstreamFlags) {
+	String stringstreamCast(const T& value, const StringstreamFlags&... stringstreamFlags) {
 		auto conversionStream = stringToOstringstream<String>();
 
-		(conversionStream << ... << std::forward<StringstreamFlags>(stringstreamFlags)) << std::forward<T>(value);
+		(conversionStream << ... << stringstreamFlags) << value;
 
 		return conversionStream.str();
 	}
