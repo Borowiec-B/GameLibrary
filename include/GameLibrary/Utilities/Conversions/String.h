@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <variant>
 
-#include "boost/lexical_cast.hpp"
+#include <boost/lexical_cast.hpp>
 
 #include "GameLibrary/Exceptions/Conversions.h"
 #include "GameLibrary/Exceptions/Standard.h"

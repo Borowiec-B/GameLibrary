@@ -3,7 +3,7 @@
 #include <optional>
 #include <stdexcept>
 
-#include "boost/type_index.hpp"
+#include <boost/type_index.hpp>
 
 #include "GameLibrary/Utilities/String.h"
 
