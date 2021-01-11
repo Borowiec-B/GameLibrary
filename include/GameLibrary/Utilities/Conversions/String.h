@@ -8,6 +8,7 @@
 #include <variant>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include "GameLibrary/Exceptions/Conversions.h"
 #include "GameLibrary/Exceptions/Standard.h"
@@ -107,8 +108,27 @@ namespace GameLibrary::Utilities::Conversions
 		}
 	}
 
-	//template<typename T, typename S>
-	//T fromString(S&& str) {
-	//}
+	template<typename I, typename S>
+	std::enable_if_t<std::is_integral_v<I>, I>
+	fromString(const S& str) {
+		try
+		{
+			return boost::lexical_cast<I>(str);
+		}
+		catch (const boost::bad_lexical_cast&)
+		{
+			try
+			{
+				// Try to recover if bad_lexical_cast is caused by str being floating-point.
+				const auto ld = fromString<long double>(str);
+				return boost::numeric_cast<I>(ld);
+			}
+			// Plenty of exception types could have been thrown at this point; they're unrecoverable, just catch everything.
+			catch (const std::exception&)
+			{
+				throw Exceptions::ConversionError::fromTypes<S, I>();
+			}
+		}
+	}
 }
 
