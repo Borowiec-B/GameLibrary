@@ -94,22 +94,21 @@ namespace GameLibrary::Utilities::Conversions
 	}
 
 	template<typename F, typename S>
-	F floatFromString(S&& str) {
+	std::enable_if_t<std::is_floating_point_v<F>, F>
+	fromString(const S& str) {
 		try
 		{
-			// std::sto* functions throw on extreme values, so boost::lexical_cast is preferable for Float to Float.
-			return boost::lexical_cast<F>(std::forward<S>(str));
+			// std::sto* functions throw on extreme values, so boost::lexical_cast is preferable over <string>'s std::sto*.
+			return boost::lexical_cast<F>(str);
 		}
 		catch (const boost::bad_lexical_cast&)
 		{
-			throw Exceptions::ConversionError::fromTypes<S&&, F>();
+			throw Exceptions::ConversionError::fromTypes<S, F>();
 		}
 	}
 
-	template<typename T, typename S>
-	T fromString(S&& str) {
-		if constexpr (std::is_floating_point_v<T>)
-			return floatFromString<T>(std::forward<S>(str));
-	}
+	//template<typename T, typename S>
+	//T fromString(S&& str) {
+	//}
 }
 
