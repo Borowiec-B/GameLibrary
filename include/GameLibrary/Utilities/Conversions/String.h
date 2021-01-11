@@ -81,18 +81,16 @@ namespace GameLibrary::Utilities::Conversions
 
 	template<typename String = std::string, typename F>
 	std::enable_if_t<std::is_floating_point_v<F>, String>
-	floatToString(F value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
+	toString(const F& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
 		const int precision = floatPrecisionToInt<F>(floatPrecision);
 
 		return stringstreamCast<String>(value, std::setprecision(precision));
 	}
 
 	template<typename String = std::string, typename T>
-	String toString(T&& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
-		if constexpr(std::is_floating_point_v<std::decay_t<T>>)
-			return floatToString<String>(value, floatPrecision);
-		else
-			return stringstreamCast<String>(std::forward<T>(value));
+	std::enable_if_t<!std::is_floating_point_v<T>, String>
+	toString(const T& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
+		return stringstreamCast<String>(value);
 	}
 
 	template<typename F, typename S>
