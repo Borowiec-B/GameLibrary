@@ -85,6 +85,8 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 			REQUIRE(fromString<long double>("100") == Approx(100));
 
 			REQUIRE_THROWS_AS(fromString<float>(L"invalid"), GameLibrary::Exceptions::ConversionError);
+			// Throw in out-of-range situations.
+			REQUIRE_THROWS_AS(fromString<float>(std::string("9", 100)), GameLibrary::Exceptions::ConversionError);
 			// Don't throw on imprecise conversions.
 			REQUIRE_NOTHROW(fromString<float>("1.1234567891111213141516171819"));
 		}
