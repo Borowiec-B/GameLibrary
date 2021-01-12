@@ -32,12 +32,22 @@ namespace GameLibrary::Utilities::Conversions
 
 	/*
 	 *  stringstreamCast: Pass all stringstreamFlags... to a Stringstream, then value, then return resulting .str().
+	 *
+	 *  Throws:
+	 *    - ConversionError when Stringstream's operator<< throws, called with value or supplied flags.
 	 */
 	template<typename String = std::string, typename T, typename... StringstreamFlags>
 	String stringstreamCast(const T& value, const StringstreamFlags&... stringstreamFlags) {
 		auto conversionStream = stringToOstringstream<String>();
 
-		(conversionStream << ... << stringstreamFlags) << value;
+		try
+		{
+			(conversionStream << ... << stringstreamFlags) << value;
+		}
+		catch (const std::exception&)
+		{
+			throw Exceptions::ConversionError::fromTypes<T, String>("stringstreamCast() failed.");
+		}
 
 		return conversionStream.str();
 	}
