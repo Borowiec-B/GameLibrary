@@ -112,6 +112,19 @@ namespace GameLibrary::Utilities::Conversions
 		return stringstreamCast<String>(value);
 	}
 
+	/*
+	 *  fromString() family: Try to return chosen type's representation of an object.
+	 *						 Currently implemented conversions are:
+	 *						   - String->Arithmetic
+	 *						   - A few cases of String->String:
+	 *						     - Conversions to char pointers aren't implemented
+	 *						     - Literal to its equivalent String type (wchar_t* to wstring, char* to string)
+	 *						     - Normal literal to wide string.
+	 *
+	 *  Throws:
+	 *    - ConversionError if casting failed for any reason.
+	 */
+
 	template<typename F, typename S>
 	std::enable_if_t<std::is_floating_point_v<F>, F>
 	fromString(const S& str) {
