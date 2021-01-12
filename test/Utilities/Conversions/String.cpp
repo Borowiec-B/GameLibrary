@@ -106,5 +106,14 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 			REQUIRE_NOTHROW(fromString<std::int16_t>("-32768.9999999999"));
 			REQUIRE_THROWS_AS(fromString<int>(L"1.2.3"), GameLibrary::Exceptions::ConversionError);
 		}
+
+		SECTION("To String")
+		{
+			// std::string -> std::wstring and std::wstring->std::string conversions aren't implemented.
+			// However, const char* argument is converted to std::wstring just fine.
+			REQUIRE(fromString<std::string>("str") == "str");
+			REQUIRE(fromString<std::wstring>(L"str") == L"str");
+			REQUIRE(fromString<std::wstring>("str") == L"str");
+		}
 	}
 }

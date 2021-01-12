@@ -130,5 +130,11 @@ namespace GameLibrary::Utilities::Conversions
 			}
 		}
 	}
+
+	template<typename T, typename S>
+	std::enable_if_t<!std::is_floating_point_v<T> && !std::is_integral_v<T>, T>
+	fromString(const S& str) {
+		return toString<T>(str);
+	}
 }
 
