@@ -76,6 +76,7 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 	{
 		SECTION("To Float")
 		{
+			// To do: Remove the toString() dependency.
 			constexpr auto lowestFloat = std::numeric_limits<float>::lowest();
 			constexpr auto minDouble = std::numeric_limits<double>::min();
 			constexpr auto maxLongDouble = std::numeric_limits<long double>::max();
