@@ -14,10 +14,6 @@
 #include "GameLibrary/Exceptions/Standard.h"
 #include "GameLibrary/Utilities/Conversions/StringToSstream.h"
 
-/*
- *  To do:
- *    - Rename template parameter identifiers to short variants.
- */
 
 namespace GameLibrary::Utilities::Conversions
 {
@@ -41,9 +37,9 @@ namespace GameLibrary::Utilities::Conversions
 	 *  Throws:
 	 *    - ConversionError when Stringstream's operator<< throws, called with value or supplied flags.
 	 */
-	template<typename String = std::string, typename T, typename... StringstreamFlags>
-	String stringstreamCast(const T& value, const StringstreamFlags&... stringstreamFlags) {
-		auto conversionStream = stringToOstringstream<String>();
+	template<typename S = std::string, typename T, typename... SF>
+	S stringstreamCast(const T& value, const SF&... stringstreamFlags) {
+		auto conversionStream = stringToOstringstream<S>();
 
 		try
 		{
@@ -51,7 +47,7 @@ namespace GameLibrary::Utilities::Conversions
 		}
 		catch (const std::exception&)
 		{
-			throw Exceptions::ConversionError::fromTypes<T, String>("stringstreamCast() failed.");
+			throw Exceptions::ConversionError::fromTypes<T, S>("stringstreamCast() failed.");
 		}
 
 		return conversionStream.str();
@@ -103,18 +99,18 @@ namespace GameLibrary::Utilities::Conversions
 	 *    - InvalidArgument if precision level is invalid (negative or containing an unknown FloatPrecisionPreset).
 	 *    - ConversionError if casting failed for any other reason.
 	 */
-	template<typename String = std::string, typename F>
-	std::enable_if_t<std::is_floating_point_v<F>, String>
+	template<typename S = std::string, typename F>
+	std::enable_if_t<std::is_floating_point_v<F>, S>
 	toString(const F& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
 		const int precision = floatPrecisionToInt<F>(floatPrecision);
 
-		return stringstreamCast<String>(value, std::setprecision(precision));
+		return stringstreamCast<S>(value, std::setprecision(precision));
 	}
 
-	template<typename String = std::string, typename T>
-	std::enable_if_t<!std::is_floating_point_v<T>, String>
+	template<typename S = std::string, typename T>
+	std::enable_if_t<!std::is_floating_point_v<T>, S>
 	toString(const T& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
-		return stringstreamCast<String>(value);
+		return stringstreamCast<S>(value);
 	}
 
 	/*
