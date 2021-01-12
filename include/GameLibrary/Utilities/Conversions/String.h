@@ -90,6 +90,14 @@ namespace GameLibrary::Utilities::Conversions
 		return ret;
 	}
 
+	/*
+	 *  toString() family: Try to return String representation of an object, currently by using a Stringstream.
+	 *  				   Optionally takes precision to be used in floating-point conversions.
+	 *
+	 *  Throws:
+	 *    - InvalidArgument if precision level is invalid (negative or containing an unknown FloatPrecisionPreset).
+	 *    - ConversionError if casting failed for any other reason.
+	 */
 	template<typename String = std::string, typename F>
 	std::enable_if_t<std::is_floating_point_v<F>, String>
 	toString(const F& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
