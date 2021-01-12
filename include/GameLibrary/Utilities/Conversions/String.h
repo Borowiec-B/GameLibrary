@@ -144,7 +144,7 @@ namespace GameLibrary::Utilities::Conversions
 			// Plenty of exception types could have been thrown at this point; they're unrecoverable, just catch everything.
 			catch (const std::exception&)
 			{
-				throw Exceptions::ConversionError::fromTypes<S, I>();
+				throw Exceptions::ConversionError::fromTypes<S, I>("fromString() failed");
 			}
 		}
 	}
