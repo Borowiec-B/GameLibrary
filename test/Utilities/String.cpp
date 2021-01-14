@@ -7,7 +7,7 @@
 using namespace GameLibrary::Utilities;
 
 
-TEST_CASE("Surround works with std::string, std::wstring, and their literals (no support for string surrounded by wstring yet).")
+TEST_CASE("Surround() works with std::string, std::wstring, and their literals (no support for string surrounded by wstring yet).")
 {
 	SECTION("std::string")
 	{
@@ -34,7 +34,7 @@ TEST_CASE("Surround works with std::string, std::wstring, and their literals (no
 	}
 }
 
-TEST_CASE("Quote matches behavior of surround() with quotation mark argument.")
+TEST_CASE("Quote() matches behavior of surround() with quotation mark argument.")
 {
 	REQUIRE(quote("str") == surround("str", '"'));
 	REQUIRE(quote(L"str") == surround(L"str", L'"'));
