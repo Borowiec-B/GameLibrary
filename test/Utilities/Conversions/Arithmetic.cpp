@@ -1,5 +1,7 @@
 #include "GameLibrary/Utilities/Conversions/Arithmetic.h"
 
+#include <limits>
+
 #include <catch2/catch.hpp>
 
 #include "GameLibrary/Exceptions/Conversions.h"
