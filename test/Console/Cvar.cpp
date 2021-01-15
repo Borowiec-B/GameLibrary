@@ -120,6 +120,12 @@ TEST_CASE("Cvar sets and returns the correct value, throwing on failure.")
 
 			c.set(-0.0);
 			REQUIRE(c.getAsString() == "-0");
+
+			c.set(std::numeric_limits<float>::quiet_NaN());
+			REQUIRE(c.getAsString() == "nan");
+
+			c.set(std::numeric_limits<float>::infinity());
+			REQUIRE(c.getAsString() == "inf");
 		}
 
 		SECTION("Integer arguments")
