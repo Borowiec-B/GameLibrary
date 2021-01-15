@@ -1,7 +1,8 @@
+#include "GameLibrary/Utilities/Conversions/Arithmetic.h"
+
 #include <catch2/catch.hpp>
 
 #include "GameLibrary/Exceptions/Conversions.h"
-#include "GameLibrary/Utilities/Conversions/Arithmetic.h"
 
 using namespace GameLibrary;
 using namespace GameLibrary::Utilities::Conversions;
