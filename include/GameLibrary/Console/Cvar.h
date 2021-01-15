@@ -142,8 +142,15 @@ namespace GameLibrary::Console
 			}
 
 			auto getAsString() const {
-				return std::visit( [ ] ( auto& valueInVariant ) {
+				return std::visit( [ ] ( const auto& valueInVariant ) {
 					return valueInVariant.getAsString();
+				}, _anyValue);
+			}
+
+			template<typename T>
+			auto getAs() const {
+				return std::visit( [ ] ( const auto& valueInVariant ) {
+						return valueInVariant.template getAs<T>();
 				}, _anyValue);
 			}
 
