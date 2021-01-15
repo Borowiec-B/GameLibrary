@@ -69,6 +69,10 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 				const auto s = toString(d, FloatPrecisionPreset::Max);
 				REQUIRE(std::stold(s) == d);
 			}
+
+			REQUIRE(toString(std::numeric_limits<float>::infinity()) == "inf");
+			REQUIRE(toString<std::wstring>(std::numeric_limits<double>::quiet_NaN()) == L"nan");
+			REQUIRE(toString(std::numeric_limits<long double>::signaling_NaN()) == "nan");
 		}
 	}
 
