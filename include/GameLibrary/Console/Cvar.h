@@ -34,15 +34,16 @@ namespace GameLibrary::Console
 			String
 		};
 
+		using Float = long double;
+		using Integer = long long;
+		using String = std::string;
+
 	private:
+
 		/*
 		 *  Value: Cvar's class for managing a raw value.
 		 * 		   Currently primary function is get/set functionality, with setter converting a wide range of types into ValueType.
 		 */
-
-		using Float = long double;
-		using Integer = long long;
-		using String = std::string;
 
 		template<typename VT>
 		class Value {
