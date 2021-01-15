@@ -23,5 +23,10 @@ TEST_CASE("safeArithmeticCast() returns expected results.")
 	REQUIRE(safeArithmeticCast<int>(128.999) == 128);
 
 	REQUIRE_THROWS_AS(safeArithmeticCast<int8_t>(int16Min), Exceptions::ConversionError);
+
+	const auto invalidNumbers = { nl<long double>::quiet_NaN(), nl<long double>::signaling_NaN(), nl<long double>::infinity() };
+	for (const auto invalid : invalidNumbers) {
+		REQUIRE_THROWS_AS(safeArithmeticCast<long double>(invalid), Exceptions::ConversionError);
+	}
 }
 
