@@ -9,11 +9,14 @@
 using namespace GameLibrary;
 using namespace GameLibrary::Utilities::Conversions;
 
+template<typename T>
+using nl = std::numeric_limits<T>;
+
 
 TEST_CASE("safeArithmeticCast() returns expected results.")
 {
-	constexpr uint64_t int8Max = std::numeric_limits<int8_t>::max();
-	constexpr int32_t int16Min = std::numeric_limits<int16_t>::min();
+	constexpr uint64_t int8Max = nl<int8_t>::max();
+	constexpr int32_t int16Min = nl<int16_t>::min();
 
 	REQUIRE(safeArithmeticCast<int16_t>(int16Min) == int16Min);
 	REQUIRE(safeArithmeticCast<int8_t>(int8Max) == int8Max);
