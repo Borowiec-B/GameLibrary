@@ -59,7 +59,6 @@ TEST_CASE("Cvar sets and returns the correct value, throwing on failure.")
 
 			REQUIRE_THROWS_AS(c.set(std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
 			REQUIRE_THROWS_AS(c.set("12.34 invalid"), Exceptions::ConversionError);
-			REQUIRE_THROWS_AS(c.set(nullptr), Exceptions::InvalidArgument);
 		}
 	}
 
@@ -101,7 +100,6 @@ TEST_CASE("Cvar sets and returns the correct value, throwing on failure.")
 
 			REQUIRE_THROWS_AS(c.set(std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
 			REQUIRE_THROWS_AS(c.set("1234 invalid"), Exceptions::ConversionError);
-			REQUIRE_THROWS_AS(c.set(nullptr), Exceptions::InvalidArgument);
 		}
 	}
 

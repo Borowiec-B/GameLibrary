@@ -63,16 +63,15 @@ namespace GameLibrary::Console
 			 *  	   Currently supports String and arithmetic arguments.
 			 *
 			 *  Throws:
-			 *    - InvalidArgument if code manages to compile, but there's no code for T&&->ValueType conversion.
+			 *    - ConversionError if converting functions failed for whatever reason
+			 *      (example causes: {NaN,infinity,alphabetical_string} for arithmetic Cvar; under/overflowing numbers for integral Cvar).
 			 */
 			template<typename T>
 			void set(T&& newValue) {
 				if constexpr (Utilities::IsStringV<T>)
 					setFromString(std::forward<T>(newValue));
-				else if constexpr (std::is_arithmetic_v<T>)
-					setFromArithmetic(newValue);
 				else
-					throw Exceptions::InvalidArgument("Value::set() failed: no conversion from given type to ValueType.");
+					setFromArithmetic(newValue);
 			}
 
 			ValueType get() const {
