@@ -18,12 +18,9 @@ namespace GameLibrary::Utilities::Conversions
 				throw Exceptions::ConversionError::fromTypes<From, To>("safeArithmeticCast() failed: invalid floating-point argument.");
 		}
 
-		try
-		{
+		try {
 			return boost::numeric_cast<To>(from);
-		}
-		catch (const std::exception&)
-		{
+		} catch (const std::exception&) {
 			throw Exceptions::ConversionError::fromTypes<From, To>("safeArithmeticCast() failed.");
 		}
 	}
