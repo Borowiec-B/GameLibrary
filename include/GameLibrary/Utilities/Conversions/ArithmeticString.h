@@ -31,7 +31,7 @@ namespace GameLibrary::Utilities::Conversions
 				return safeArithmeticCast<To>(std::forward<From>(from));
 			else if constexpr (IsStringV<To>)
 				return toString<To>(std::forward<From>(from));
-			else if constexpr (IsStringV<From>)
+			else
 				return fromString<To>(std::forward<From>(from));
 		}
 		catch (const std::exception&)
