@@ -6,8 +6,7 @@
 #include <string>
 #include <type_traits>
 
-#include "GameLibrary/Utilities/Conversions/Arithmetic.h"
-#include "GameLibrary/Utilities/Conversions/String.h"
+#include "GameLibrary/Utilities/Conversions/ArithmeticString.h"
 
 
 namespace GameLibrary::Console
@@ -68,10 +67,14 @@ namespace GameLibrary::Console
 			 */
 			template<typename T>
 			void set(T&& newValue) {
-				if constexpr (Utilities::IsStringV<T>)
-					setFromString(std::forward<T>(newValue));
-				else
-					setFromArithmetic(newValue);
+				try
+				{
+					_value = Utilities::Conversions::arithmeticOrStringCast<ValueType>(std::forward<T>(newValue),
+																					   Utilities::Conversions::FloatPrecisionPreset::Normal);
+				} catch (...)
+				{
+					throw Exceptions::ConversionError::fromTypes<T, ValueType>("Cvar::Value::set() failed.");
+				}
 			}
 
 			ValueType get() const {
@@ -88,19 +91,6 @@ namespace GameLibrary::Console
 					return "";
 				else
 					return 0;
-			}
-
-			template<typename S>
-			void setFromString(S&& str) {
-				_value = Utilities::Conversions::fromString<ValueType>(std::forward<S>(str));
-			}
-
-			template<typename A>
-			void setFromArithmetic(A a) {
-				if constexpr (Utilities::IsStringV<ValueType>)
-					_value = Utilities::Conversions::toString<ValueType>(a);
-				else
-					_value = Utilities::Conversions::safeArithmeticCast<ValueType>(a);
 			}
 
 			ValueType _value;
