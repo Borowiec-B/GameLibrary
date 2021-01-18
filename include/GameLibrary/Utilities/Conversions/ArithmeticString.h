@@ -28,7 +28,7 @@ namespace GameLibrary::Utilities::Conversions
 		{
 			if constexpr (std::is_same_v<std::decay_t<To>, std::decay_t<From>>)
 				return std::forward<From>(from);
-			else if constexpr (std::is_arithmetic_v<To> && std::is_arithmetic_v<From>)
+			else if constexpr (std::is_arithmetic_v<std::decay_t<To>> && std::is_arithmetic_v<std::decay_t<From>>)
 				return safeArithmeticCast<To>(std::forward<From>(from));
 			else if constexpr (IsStringV<To>)
 				return toString<To>(std::forward<From>(from), floatPrecision);
