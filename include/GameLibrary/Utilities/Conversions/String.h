@@ -30,7 +30,6 @@ namespace GameLibrary::Utilities::Conversions
 	};
 	using FloatPrecision = std::variant<int, FloatPrecisionPreset>;
 
-
 	/*
 	 *  stringstreamCast: Pass all stringstreamFlags... to a Stringstream, then value, then return resulting .str().
 	 *
@@ -40,13 +39,10 @@ namespace GameLibrary::Utilities::Conversions
 	template<typename S = std::string, typename T, typename... SF>
 	S stringstreamCast(const T& value, const SF&... stringstreamFlags) {
 		auto conversionStream = stringToOstringstream<S>();
-
-		try
-		{
+		try {
 			(conversionStream << ... << stringstreamFlags) << value;
 		}
-		catch (const std::exception&)
-		{
+		catch (const std::exception&) {
 			throw Exceptions::ConversionError::fromTypes<T, S>("stringstreamCast() failed.");
 		}
 
@@ -143,13 +139,11 @@ namespace GameLibrary::Utilities::Conversions
 	template<typename F, typename S>
 	std::enable_if_t<std::is_floating_point_v<F>, F>
 	fromString(const S& str) {
-		try
-		{
+		try {
 			// std::sto* functions throw on extreme values, so boost::lexical_cast is preferable over <string>'s std::sto*.
 			return boost::lexical_cast<F>(str);
 		}
-		catch (const boost::bad_lexical_cast&)
-		{
+		catch (const boost::bad_lexical_cast&) {
 			throw Exceptions::ConversionError::fromTypes<S, F>();
 		}
 	}
