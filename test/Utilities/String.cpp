@@ -7,7 +7,7 @@
 using namespace GameLibrary::Utilities;
 
 
-TEST_CASE("Surround() works with std::string, std::wstring, and their literals (no support for string surrounded by wstring yet).")
+TEST_CASE("Surround() works with std::string, std::wstring, and their literals.")
 {
 	SECTION("std::string")
 	{
