@@ -21,7 +21,7 @@ namespace GameLibrary::Utilities::Conversions
 	 *    - ConversionError if any underlying conversion functions throw.
 	 */
 	template<typename To, typename From>
-	std::enable_if_t<(std::is_arithmetic_v<To> || IsStringV<To>) && (std::is_arithmetic_v<From> || IsStringV<From>), 
+	std::enable_if_t<(IsArithmeticOrStringV<To> && IsArithmeticOrStringV<From>),
 	To>
 	arithmeticOrStringCast(From&& from) {
 		try
