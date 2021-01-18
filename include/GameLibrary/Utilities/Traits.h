@@ -17,4 +17,9 @@ namespace GameLibrary::Utilities
 	> {};
 	template<typename T>
 	inline constexpr bool IsStringV = IsString<T>::value;
+
+	template<typename T>
+	struct IsArithmeticOrString : public std::disjunction<std::is_arithmetic<std::decay_t<T>>, IsString<std::decay_t<T>>> {};
+	template<typename T>
+	constexpr inline bool IsArithmeticOrStringV = IsArithmeticOrString<T>::value;
 }
