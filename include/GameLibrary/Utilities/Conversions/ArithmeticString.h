@@ -23,7 +23,7 @@ namespace GameLibrary::Utilities::Conversions
 	template<typename To, typename From>
 	std::enable_if_t<(IsArithmeticOrStringV<To> && IsArithmeticOrStringV<From>),
 	To>
-	arithmeticOrStringCast(From&& from) {
+	arithmeticOrStringCast(From&& from, FloatPrecision floatPrecision = FloatPrecisionPreset::Normal) {
 		try
 		{
 			if constexpr (std::is_same_v<std::decay_t<To>, std::decay_t<From>>)
@@ -31,7 +31,7 @@ namespace GameLibrary::Utilities::Conversions
 			else if constexpr (std::is_arithmetic_v<To> && std::is_arithmetic_v<From>)
 				return safeArithmeticCast<To>(std::forward<From>(from));
 			else if constexpr (IsStringV<To>)
-				return toString<To>(std::forward<From>(from));
+				return toString<To>(std::forward<From>(from), floatPrecision);
 			else
 				return fromString<To>(std::forward<From>(from));
 		}
