@@ -42,21 +42,3 @@ TEST_CASE("Quote() matches behavior of surround() with quotation mark argument."
 	REQUIRE(quote(L"") == surround(L"", L'"'));
 }
 
-TEST_CASE("IsString() returns correct results.")
-{
-	REQUIRE(IsStringV<char*>);
-	REQUIRE(IsStringV<const char*>);
-	REQUIRE(IsStringV<std::string>);
-	REQUIRE(IsStringV<const std::string&>);
-	REQUIRE(IsStringV<std::string&&>);
-
-	REQUIRE(IsStringV<wchar_t*>);
-	REQUIRE(IsStringV<const wchar_t*>);
-	REQUIRE(IsStringV<std::wstring>);
-	REQUIRE(IsStringV<const std::wstring&>);
-	REQUIRE(IsStringV<std::wstring&&>);
-
-	REQUIRE_FALSE(IsStringV<int>);
-	REQUIRE_FALSE(IsStringV<float&&>);
-	REQUIRE_FALSE(IsStringV<struct Dummy>);
-}

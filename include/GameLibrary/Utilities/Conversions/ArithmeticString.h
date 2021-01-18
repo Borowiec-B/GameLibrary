@@ -3,6 +3,7 @@
 #include "GameLibrary/Exceptions/Conversions.h"
 #include "GameLibrary/Utilities/Conversions/Arithmetic.h"
 #include "GameLibrary/Utilities/Conversions/String.h"
+#include "GameLibrary/Utilities/Traits.h"
 
 
 namespace GameLibrary::Utilities::Conversions
