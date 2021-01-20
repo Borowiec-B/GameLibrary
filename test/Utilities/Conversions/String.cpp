@@ -49,14 +49,28 @@ TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns 
 	}
 }
 
-TEST_CASE("From/to String converters return expected values, operating on std::string/std::wstring.")
+TEST_CASE("From/to String converters return expected values, operating on std::string/std::wstring and arithmetic types.")
 {
 	SECTION("To String")
 	{
-		SECTION("From String")
+		SECTION("From Float")
 		{
-			REQUIRE(toString("string") == "string");
-			REQUIRE(toString<std::wstring>("") == L"");
+			REQUIRE(toString(10.123456789, FloatPrecision(6)) == "10.123457");
+			REQUIRE(toString<std::wstring>(-10.123456789, FloatPrecision(6)) == L"-10.123457");
+
+			// Require that FloatPrecision::max() guarantees to keep exact same value Float->String->Float.
+			// std::numeric_limits<T>::min() is too problematic, and always seem to show up simply as zeros in string form.
+			const std::vector<long double> extremeDoubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
+															  0.0 };
+			for (const auto& originalFloat : extremeDoubles) {
+				const auto floatToString = toString(originalFloat, FloatPrecision::max());
+				const auto floatToStringToFloat = std::stold(floatToString);
+				REQUIRE(floatToStringToFloat == originalFloat);
+			}
+
+			REQUIRE(toString(std::numeric_limits<float>::infinity()) == "inf");
+			REQUIRE(toString<std::wstring>(std::numeric_limits<double>::quiet_NaN()) == L"nan");
+			REQUIRE(toString(std::numeric_limits<long double>::signaling_NaN()) == "nan");
 		}
 
 		SECTION("From Integer")
@@ -66,23 +80,10 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 			REQUIRE(toString(max_uint32) == "4294967295");
 		}
 
-		SECTION("From Float")
+		SECTION("From String")
 		{
-			// Precision: 6
-			REQUIRE(toString(10.123456789, FloatPrecision(6)) == "10.123457");
-			REQUIRE(toString<std::wstring>(-10.123456789, FloatPrecision(6)) == L"-10.123457");
-
-			// Require that FloatPrecision::max() guarantees to keep exact same value Float->String->Float.
-			const std::vector<long double> extremeDoubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
-															  0.0 };
-			for (const auto& d : extremeDoubles) {
-				const auto s = toString(d, FloatPrecision::max());
-				REQUIRE(std::stold(s) == d);
-			}
-
-			REQUIRE(toString(std::numeric_limits<float>::infinity()) == "inf");
-			REQUIRE(toString<std::wstring>(std::numeric_limits<double>::quiet_NaN()) == L"nan");
-			REQUIRE(toString(std::numeric_limits<long double>::signaling_NaN()) == "nan");
+			REQUIRE(toString("string") == "string");
+			REQUIRE(toString<std::wstring>("") == L"");
 		}
 	}
 
@@ -90,12 +91,13 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 	{
 		SECTION("To Float")
 		{
-			// To do: Remove the toString() dependency.
-			constexpr auto lowestFloat = std::numeric_limits<float>::lowest();
-			constexpr auto maxLongDouble = std::numeric_limits<long double>::max();
+			constexpr auto lowestFloat          = std::numeric_limits<float>::lowest();
+			const auto     lowestFloatString    = toString(lowestFloat, FloatPrecision::max());
+			constexpr auto maxLongDouble        = std::numeric_limits<long double>::max();
+			const auto     maxLongDoubleWstring = toString<std::wstring>(maxLongDouble, FloatPrecision::max());
 
-			REQUIRE(fromString<float>(toString(lowestFloat, FloatPrecision::max())) == lowestFloat);
-			REQUIRE(fromString<long double>(toString(maxLongDouble, FloatPrecision::max())) == maxLongDouble);
+			REQUIRE(fromString<float>(lowestFloatString) == lowestFloat);
+			REQUIRE(fromString<long double>(maxLongDoubleWstring) == maxLongDouble);
 			REQUIRE(fromString<long double>("100") == Approx(100));
 
 			REQUIRE_THROWS_AS(fromString<float>(L"invalid"), GameLibrary::Exceptions::ConversionError);
@@ -109,7 +111,7 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 		{
 			REQUIRE(fromString<std::uint32_t>("4294967295") == 4294967295);
 			REQUIRE(fromString<std::int16_t>(L"-32768") == -32768);
-			REQUIRE(fromString<int>("123.456") == 123);
+			REQUIRE(fromString<int>("123.99999") == 123);
 
 			// Throw in out-of-range situations.
 			REQUIRE_THROWS_AS(fromString<int>(std::wstring(L"9", 100)), GameLibrary::Exceptions::ConversionError);
@@ -117,6 +119,7 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 			REQUIRE_THROWS_AS(fromString<std::int16_t>("1000000.12346789"), GameLibrary::Exceptions::ConversionError);
 			REQUIRE_NOTHROW(fromString<std::int16_t>(L"32767.9999999999"));
 			REQUIRE_NOTHROW(fromString<std::int16_t>("-32768.9999999999"));
+
 			REQUIRE_THROWS_AS(fromString<int>(L"1.2.3"), GameLibrary::Exceptions::ConversionError);
 		}
 
