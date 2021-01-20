@@ -11,7 +11,7 @@ namespace GameLibrary::Utilities::Conversions
 {
 	template<typename To, typename From>
 	To safeArithmeticCast(From from) {
-		if constexpr (std::is_floating_point_v<From>)
+		if constexpr (std::is_floating_point_v<std::decay_t<From>>)
 		{
 			const auto category = std::fpclassify(from);
 			if (category != FP_NORMAL && category != FP_ZERO && category != FP_SUBNORMAL)
