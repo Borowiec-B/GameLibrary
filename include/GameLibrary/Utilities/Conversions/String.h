@@ -65,7 +65,7 @@ namespace GameLibrary::Utilities::Conversions
 		try {
 			(conversionStream << ... << stringstreamFlags) << value;
 		}
-		catch (const std::exception&) {
+		catch (...) {
 			throw Exceptions::ConversionError::fromTypes<T, S>("stringstreamCast() failed.");
 		}
 
