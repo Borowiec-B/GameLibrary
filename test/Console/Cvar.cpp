@@ -1,159 +1,94 @@
 #include "GameLibrary/Console/Cvar.h"
 
+#include <cstdint>
 #include <limits>
 
 #include "catch2/catch.hpp"
 
-#include "GameLibrary/Exceptions/Standard.h"
+#include "GameLibrary/Exceptions/Conversions.h"
 
 using namespace GameLibrary;
 using namespace GameLibrary::Console;
 
-/*
- *  To do:
- *    - Reorder sections to alphabetical order.
- *    - Write tests for invalid float arguments.
- */
+using Catch::Matchers::StartsWith;
 
-TEST_CASE("Cvar sets and returns the correct value, throwing on failure.")
+
+TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer getters not implemented yet.)")
 {
 	SECTION("Float Cvar")
 	{
-		SECTION("Integer arguments")
-		{
-			Cvar c(Cvar::ValueType::Float, 1);
-			REQUIRE(c.getAsString() == "1");
+		Cvar c(Cvar::ValueType::Float, std::numeric_limits<std::int16_t>::min());
 
-			c.set(-100);
-			REQUIRE(c.getAsString() == "-100");
+		REQUIRE_THAT(c.getAsString(), StartsWith("-32768"));
+		REQUIRE(c.getAs<int>() == -32768);
+		REQUIRE(c.getAs<long double>() == Approx(-32768));
 
-			// There's no negative zero integer, store it as plain 0.
-			c.set(-0);
-			REQUIRE(c.getAsString() == "0");
-		}
+		c.set(L"100.123");
 
-		SECTION("String arguments")
-		{
-			Cvar c(Cvar::ValueType::Float, "1.2340000000");
-			REQUIRE(c.getAsString() == "1.234");
+		REQUIRE_THAT(c.getAsString(), StartsWith("100.123"));
+		REQUIRE(c.getAs<char>() == 100);
 
-			c.set("-3.14");
-			REQUIRE(c.getAsString() == "-3.14");
+		c.set(-1024.256);
 
-			c.set("-0");
-			REQUIRE(c.getAsString() == "-0");
-		}
-
-		SECTION("Float arguments")
-		{
-			Cvar c(Cvar::ValueType::Float, -1.0);
-			REQUIRE(c.getAsString() == "-1");
-
-			c.set(-0.0);
-			REQUIRE(c.getAsString() == "-0");
-		}
-
-		SECTION("Invalid arguments")
-		{
-			Cvar c(Cvar::ValueType::Float, 0);
-
-			REQUIRE_THROWS_AS(c.set(std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
-			REQUIRE_THROWS_AS(c.set("12.34 invalid"), Exceptions::ConversionError);
-		}
+		REQUIRE_THAT(c.getAs<std::string>(), StartsWith("-1024.256"));
+		REQUIRE(c.getAs<int>() == -1024);
 	}
 
-	SECTION("Integer Cvar (Float->Integer should truncate)")
+	SECTION("Integer Cvar")
 	{
-		SECTION("Float arguments")
-		{
-			Cvar c(Cvar::ValueType::Integer, -0.49999999);
-			REQUIRE(c.getAsString() == "0");
+		Cvar c(Cvar::ValueType::Integer, -1.999);
 
-			c.set(0.500);
-			REQUIRE(c.getAsString() == "0");
-		}
+		REQUIRE(c.getAsString() == "-1");
+		REQUIRE(c.getAs<char>() == -1);
 
-		SECTION("Integer arguments")
-		{
-			Cvar c(Cvar::ValueType::Integer, 1);
-			REQUIRE(c.getAsString() == "1");
+		c.set("256");
+		REQUIRE(c.getAs<int>() == 256);
 
-			c.set(-100000);
-			REQUIRE(c.getAsString() == "-100000");
-		}
-
-		SECTION("String arguments")
-		{
-			Cvar c(Cvar::ValueType::Integer, "-1000");
-			REQUIRE(c.getAsString() == "-1000");
-
-			c.set("1.50000");
-			REQUIRE(c.getAsString() == "1");
-
-			c.set("-1.99999");
-			REQUIRE(c.getAsString() == "-1");
-		}
-
-		SECTION("Invalid Arguments")
-		{
-			Cvar c(Cvar::ValueType::Integer, 0);
-
-			REQUIRE_THROWS_AS(c.set(std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
-			REQUIRE_THROWS_AS(c.set("1234 invalid"), Exceptions::ConversionError);
-		}
+		c.set(1024);
+		REQUIRE(c.getAs<int>() == 1024);
 	}
 
 	SECTION("String Cvar")
 	{
-		SECTION("Float arguments (trailing zeros are to be removed in String representation)")
-		{
-			Cvar c(Cvar::ValueType::String, 50.5000);
-			REQUIRE(c.getAsString() == "50.5");
+		Cvar c(Cvar::ValueType::String, 128.999);
 
-			c.set(3.141);
-			REQUIRE(c.getAsString() == "3.141");
+		REQUIRE_THAT(c.getAsString(), StartsWith("128.999"));
+		REQUIRE(c.getAs<int>() == 128);
+		REQUIRE(c.getAs<double>() == Approx(128.999));
 
-			c.set(-2.71830000001);
-			REQUIRE(c.getAsString() == "-2.71830000001");
+		c.set("String");
+		REQUIRE(c.getAsString() == "String");
 
-			c.set(-0.0);
-			REQUIRE(c.getAsString() == "-0");
+		c.set(std::numeric_limits<float>::infinity());
+		REQUIRE(c.getAsString() == "inf");
+		c.set(std::numeric_limits<float>::quiet_NaN());
+		REQUIRE(c.getAsString() == "nan");
+		c.set(std::numeric_limits<float>::signaling_NaN());
+		REQUIRE(c.getAsString() == "nan");
+	}
 
-			c.set(std::numeric_limits<float>::quiet_NaN());
-			REQUIRE(c.getAsString() == "nan");
+	SECTION("Invalid inputs throw ConversionError and keep the value untouched")
+	{
+		REQUIRE_THROWS_AS(Cvar(Cvar::ValueType::Float, std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
+		REQUIRE_THROWS_AS(Cvar(Cvar::ValueType::Integer, std::numeric_limits<double>::infinity()), Exceptions::ConversionError);
 
-			c.set(std::numeric_limits<float>::infinity());
-			REQUIRE(c.getAsString() == "inf");
-		}
+		Cvar floatCvar(Cvar::ValueType::Float, 0);
 
-		SECTION("Integer arguments")
-		{
-			Cvar c(Cvar::ValueType::String, 50);
-			REQUIRE(c.getAsString() == "50");
+		REQUIRE_THROWS_AS(floatCvar.set(std::numeric_limits<long double>::quiet_NaN()), Exceptions::ConversionError);
+		REQUIRE_THROWS_AS(floatCvar.set(std::numeric_limits<long double>::infinity()), Exceptions::ConversionError);
+		REQUIRE(floatCvar.getAs<int>() == 0);
 
-			c.set(100);
-			REQUIRE(c.getAsString() == "100");
+		Cvar integerCvar(Cvar::ValueType::Integer, -1024);
 
-			c.set(-200);
-			REQUIRE(c.getAsString() == "-200");
+		REQUIRE_THROWS_AS(integerCvar.getAs<char>(), Exceptions::ConversionError);
+		REQUIRE_THROWS_AS(integerCvar.getAs<std::uint32_t>(), Exceptions::ConversionError);
+		REQUIRE_THROWS_AS(integerCvar.set(std::numeric_limits<long double>::infinity()), Exceptions::ConversionError);
 
-			// There's no negative zero integer, store it as plain 0.
-			c.set(-0);
-			REQUIRE(c.getAsString() == "0");
-		}
+		REQUIRE(integerCvar.getAs<int>() == -1024);
 
-		SECTION("String arguments")
-		{
-			Cvar c(Cvar::ValueType::String, "initial_value");
-			REQUIRE(c.getAsString() == "initial_value");
+		Cvar stringCvar(Cvar::ValueType::String, "99999");
 
-			c.set("new_correct_value");
-			REQUIRE(c.getAsString() == "new_correct_value");
-
-			c.set("");
-			REQUIRE(c.getAsString() == "");
-		}
-
+		REQUIRE_THROWS_AS(stringCvar.getAs<std::int8_t>(), Exceptions::ConversionError);
 	}
 }
 

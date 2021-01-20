@@ -47,6 +47,8 @@ namespace GameLibrary::Console
 		template<typename VT>
 		class Value {
 			using ValueType = VT;
+
+			constexpr static auto _floatPrecision = Utilities::Conversions::FloatPrecision(4);
 		public:
 			template<typename T>
 			Value(T&& initialValue) {
@@ -77,12 +79,29 @@ namespace GameLibrary::Console
 				}
 			}
 
-			ValueType get() const {
-				return _value;
+			/*
+			 *  getAs(): Use arithmeticOrStringCast() to get given type, or - if that's not possible - try to construct T(_value).
+			 *
+			 *  Throws:
+			 *    - ConversionError if any used function throws.
+			 */
+			template<typename T>
+			T getAs() const {
+				try
+				{
+					if constexpr (Utilities::IsArithmeticOrStringV<T>)
+						return Utilities::Conversions::arithmeticOrStringCast<T>(_value, _floatPrecision);
+					else
+						return T(_value);
+				}
+				catch (...)
+				{
+					throw Exceptions::ConversionError::fromTypes<ValueType, T>("Cvar::Value::getAs() failed.");
+				}
 			}
 
 			String getAsString() const {
-				return Utilities::Conversions::toString(_value);
+				return getAs<String>();
 			}
 
 		private:
@@ -157,6 +176,11 @@ namespace GameLibrary::Console
 		template<typename T>
 		void set(T&& newValue) {
 			_value.set(std::forward<T>(newValue));
+		}
+
+		template<typename T>
+		auto getAs() const {
+			return _value.getAs<T>();
 		}
 
 	private:
