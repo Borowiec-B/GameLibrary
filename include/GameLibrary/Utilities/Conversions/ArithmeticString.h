@@ -32,7 +32,7 @@ namespace GameLibrary::Utilities::Conversions
 			else
 				return fromString<To>(std::forward<From>(from));
 		}
-		catch (const std::exception&)
+		catch (...)
 		{
 			throw Exceptions::ConversionError::fromTypes<From, To>();
 		}
