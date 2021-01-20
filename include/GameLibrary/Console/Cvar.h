@@ -69,12 +69,9 @@ namespace GameLibrary::Console
 			 */
 			template<typename T>
 			void set(T&& newValue) {
-				try
-				{
-					_value = Utilities::Conversions::arithmeticOrStringCast<ValueType>(std::forward<T>(newValue),
-																					   Utilities::Conversions::FloatPrecisionPreset::Normal);
-				} catch (...)
-				{
+				try {
+					_value = Utilities::Conversions::arithmeticOrStringCast<ValueType>(std::forward<T>(newValue), _floatPrecision);
+				} catch (Exceptions::ConversionError) {
 					throw Exceptions::ConversionError::fromTypes<T, ValueType>("Cvar::Value::set() failed.");
 				}
 			}
