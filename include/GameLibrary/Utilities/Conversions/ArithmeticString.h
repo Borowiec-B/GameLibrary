@@ -12,7 +12,6 @@ namespace GameLibrary::Utilities::Conversions
 	 *  arithmeticOrStringCast(): Perform conversion Arithmetic/String -> Arithmetic/String.
 	 *
 	 *  Guidelines (each position is an if-else):
-	 *    - To == From (both decayed):	return from.
 	 *    - Both types are arithmetic:	perform safeArithmeticCast()
 	 *    - To is String:				perform toString() on from.
 	 *    - From is String:				perform fromString() on from.
@@ -26,9 +25,7 @@ namespace GameLibrary::Utilities::Conversions
 	arithmeticOrStringCast(From&& from, FloatPrecision floatPrecision = FloatPrecision::normal()) {
 		try
 		{
-			if constexpr (std::is_same_v<std::decay_t<To>, std::decay_t<From>>)
-				return std::forward<From>(from);
-			else if constexpr (std::is_arithmetic_v<std::decay_t<To>> && std::is_arithmetic_v<std::decay_t<From>>)
+			if constexpr (std::is_arithmetic_v<std::decay_t<To>> && std::is_arithmetic_v<std::decay_t<From>>)
 				return safeArithmeticCast<To>(std::forward<From>(from));
 			else if constexpr (IsStringV<To>)
 				return toString<To>(std::forward<From>(from), floatPrecision);
