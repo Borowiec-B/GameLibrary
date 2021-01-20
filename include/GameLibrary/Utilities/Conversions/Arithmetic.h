@@ -17,11 +17,12 @@ namespace GameLibrary::Utilities::Conversions
 			if ((category != FP_NORMAL) && (category != FP_ZERO) && (category != FP_SUBNORMAL))
 			{
 				throw Exceptions::ConversionError::fromTypes<From, To>("safeArithmeticCast() failed: invalid floating-point argument.");
+			}
 		}
 
 		try {
 			return boost::numeric_cast<To>(from);
-		} catch (const std::exception&) {
+		} catch (...) {
 			throw Exceptions::ConversionError::fromTypes<From, To>("safeArithmeticCast() failed.");
 		}
 	}
