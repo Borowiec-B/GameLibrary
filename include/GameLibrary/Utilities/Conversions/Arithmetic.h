@@ -14,7 +14,8 @@ namespace GameLibrary::Utilities::Conversions
 		if constexpr (std::is_floating_point_v<std::decay_t<From>>)
 		{
 			const auto category = std::fpclassify(from);
-			if (category != FP_NORMAL && category != FP_ZERO && category != FP_SUBNORMAL)
+			if ((category != FP_NORMAL) && (category != FP_ZERO) && (category != FP_SUBNORMAL))
+			{
 				throw Exceptions::ConversionError::fromTypes<From, To>("safeArithmeticCast() failed: invalid floating-point argument.");
 		}
 
