@@ -12,6 +12,21 @@
 using namespace GameLibrary::Utilities::Conversions;
 
 
+TEST_CASE("FloatPrecision sets and returns custom precision, or max precision; throws on invalid precision.")
+{
+	FloatPrecision one(1);
+
+	REQUIRE_FALSE(one.isMax());
+	REQUIRE(one.get<float>() == 1);
+
+	FloatPrecision max = FloatPrecision::max();
+
+	REQUIRE(max.isMax());
+	REQUIRE(max.get<long double>() == std::numeric_limits<long double>::max_digits10);
+
+	REQUIRE_THROWS_AS(FloatPrecision(-1), GameLibrary::Exceptions::InvalidArgument);
+}
+
 TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns resulting std::string/std::wstring.")
 {
 	SECTION("Float to String")
@@ -53,20 +68,15 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 
 		SECTION("From Float")
 		{
-			// Default precision
-			REQUIRE(toString(0.123456789) == "0.123456789");
-			REQUIRE(toString<std::wstring>(-4321.1234) == L"-4321.1234");
-
 			// Precision: 6
-			REQUIRE(toString(10.123456789, 6) == "10.1235");
-			REQUIRE(toString<std::wstring>(-10.123456789, 6) == L"-10.1235");
+			REQUIRE(toString(10.123456789, FloatPrecision(6)) == "10.123457");
+			REQUIRE(toString<std::wstring>(-10.123456789, FloatPrecision(6)) == L"-10.123457");
 
-			// Require that FloatPrecisionPreset::Max guarantees to keep exact same value Float->String->Float.
+			// Require that FloatPrecision::max() guarantees to keep exact same value Float->String->Float.
 			const std::vector<long double> extremeDoubles = { -M_PI, std::numeric_limits<long double>::max(), std::numeric_limits<long double>::lowest(),
-															  -std::numeric_limits<long double>::min(), 0.0 };
-
+															  0.0 };
 			for (const auto& d : extremeDoubles) {
-				const auto s = toString(d, FloatPrecisionPreset::Max);
+				const auto s = toString(d, FloatPrecision::max());
 				REQUIRE(std::stold(s) == d);
 			}
 
@@ -82,12 +92,10 @@ TEST_CASE("From/to String converters return expected values, operating on std::s
 		{
 			// To do: Remove the toString() dependency.
 			constexpr auto lowestFloat = std::numeric_limits<float>::lowest();
-			constexpr auto minDouble = std::numeric_limits<double>::min();
 			constexpr auto maxLongDouble = std::numeric_limits<long double>::max();
 
-			REQUIRE(fromString<float>(toString(lowestFloat, FloatPrecisionPreset::Max)) == lowestFloat);
-			REQUIRE(fromString<double>(toString<std::wstring>(minDouble, FloatPrecisionPreset::Max)) == minDouble);
-			REQUIRE(fromString<long double>(toString(maxLongDouble, FloatPrecisionPreset::Max)) == maxLongDouble);
+			REQUIRE(fromString<float>(toString(lowestFloat, FloatPrecision::max())) == lowestFloat);
+			REQUIRE(fromString<long double>(toString(maxLongDouble, FloatPrecision::max())) == maxLongDouble);
 			REQUIRE(fromString<long double>("100") == Approx(100));
 
 			REQUIRE_THROWS_AS(fromString<float>(L"invalid"), GameLibrary::Exceptions::ConversionError);

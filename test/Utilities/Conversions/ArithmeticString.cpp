@@ -12,11 +12,12 @@ using namespace GameLibrary::Utilities::Conversions;
 TEST_CASE("arithmeticOrStringCast() sticks to guidelines (calls correct casting functions).")
 {
 	REQUIRE(arithmeticOrStringCast<int>(1.9999) == safeArithmeticCast<int>(1.9999));
-	REQUIRE(arithmeticOrStringCast<std::wstring>(std::numeric_limits<float>::infinity(), 10) == toString<std::wstring>(std::numeric_limits<float>::infinity(), FloatPrecisionPreset::Max));
+	REQUIRE(arithmeticOrStringCast<std::wstring>(std::numeric_limits<float>::infinity(), FloatPrecision(10)) ==
+			toString<std::wstring>(std::numeric_limits<float>::infinity(), FloatPrecision::max()));
 
-	REQUIRE(arithmeticOrStringCast<std::string>(12.345678, 5) == "12.346");
+	REQUIRE(arithmeticOrStringCast<std::string>(12.345678, FloatPrecision(5)) == "12.34568");
 
-	const auto toWStringLDMax = toString<std::wstring>(std::numeric_limits<long double>::max(), FloatPrecisionPreset::Max);
+	const auto toWStringLDMax = toString<std::wstring>(std::numeric_limits<long double>::max(), FloatPrecision::max());
 	const auto fromWStringLDMax = fromString<long double>(toWStringLDMax);
 	REQUIRE(arithmeticOrStringCast<long double>(toWStringLDMax) == Approx(fromWStringLDMax));
 

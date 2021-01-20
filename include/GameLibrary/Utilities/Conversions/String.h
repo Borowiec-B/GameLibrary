@@ -18,17 +18,40 @@
 namespace GameLibrary::Utilities::Conversions
 {
 	/*
-	 *  FloatPrecision: Used to specify desired precision when converting floats to strings.
-	 *  				Results will be rounded.
-	 *  
-	 *  Normal uses std::numeric_limits<T>::digits10 and std::noshowpoint.
-	 *  Max uses std::numeric_limits<T>::max_digits10.
+	 *  FloatPrecision: Utility for storing a custom int precision, or max precision (float->string->float guarantee), likely to be used in streams.
+	 *                  Also used for storing presets like normal().
 	 */
-	enum class FloatPrecisionPreset {
-		Normal,
-		Max
+	struct FloatPrecision {
+		explicit constexpr FloatPrecision(const int precision) : precision(precision) {
+			if (precision < 0)
+				throw Exceptions::InvalidArgument("FloatPrecision::FloatPrecision() failed: precision can't be negative.");
+		}
+		
+		constexpr static FloatPrecision normal() noexcept {
+			return FloatPrecision(4);
+		}
+
+		constexpr static FloatPrecision max() noexcept {
+			return FloatPrecision();
+		}
+
+		constexpr bool isMax() const noexcept {
+			return !precision.has_value();
+		}
+
+		template<typename F>
+		constexpr auto get() const {
+			if (isMax())
+				return std::numeric_limits<F>::max_digits10;
+			else
+				return precision.value();
+		}
+
+	private:
+		explicit constexpr FloatPrecision() noexcept : precision(std::nullopt) {}
+
+		std::optional<int> precision;
 	};
-	using FloatPrecision = std::variant<int, FloatPrecisionPreset>;
 
 	/*
 	 *  stringstreamCast: Pass all stringstreamFlags... to a Stringstream, then value, then return resulting .str().
@@ -50,44 +73,6 @@ namespace GameLibrary::Utilities::Conversions
 	}
 
 	/*
-	 *  floatPrecisionToInt: FloatPrecision can contain either FloatPrecisionPreset or int. Convert it to int.
-	 *
-	 *  Throws:
-	 *    - InvalidArgument when floatPrecision contains a negative number or unhandled FloatPrecisionPreset.
-	 */
-	template<typename F>
-	std::enable_if_t<std::is_floating_point_v<F>, int> floatPrecisionToInt(const FloatPrecision& floatPrecision) {
-		int ret;
-
-		if (std::holds_alternative<FloatPrecisionPreset>(floatPrecision))
-		{
-			const auto precisionPreset = std::get<FloatPrecisionPreset>(floatPrecision);
-			switch (precisionPreset)
-			{
-				case FloatPrecisionPreset::Normal:
-					ret = std::numeric_limits<F>::digits10;
-					break;
-				case FloatPrecisionPreset::Max:
-					ret = std::numeric_limits<F>::max_digits10;
-					break;
-				default:
-					throw Exceptions::InvalidArgument("Used an unimplemented FloatPrecisionPreset.");
-					break;
-			}
-		}
-		else if (std::holds_alternative<int>(floatPrecision))
-		{
-			const int storedPrecision = std::get<int>(floatPrecision);
-			if (storedPrecision < 0)
-				throw Exceptions::InvalidArgument("Attempted to set negative float precision.");
-
-			ret = storedPrecision;
-		}
-
-		return ret;
-	}
-
-	/*
 	 *  toString() family: Try to return String representation of an object.
 	 *  				   Optionally takes precision to be used in floating-point conversions.
 	 *
@@ -97,7 +82,7 @@ namespace GameLibrary::Utilities::Conversions
 	 */
 	template<typename S = std::string, typename F>
 	std::enable_if_t<std::is_floating_point_v<F>, S>
-	toString(const F& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
+	toString(const F& value, const FloatPrecision& floatPrecision = FloatPrecision::normal()) {
 		switch (fpclassify(value))
 		{
 			case FP_NAN:
@@ -112,14 +97,12 @@ namespace GameLibrary::Utilities::Conversions
 					return "inf";
 		}
 
-		const int precision = floatPrecisionToInt<F>(floatPrecision);
-
-		return stringstreamCast<S>(value, std::setprecision(precision));
+		return stringstreamCast<S>(value, std::fixed, std::setprecision(floatPrecision.get<F>()));
 	}
 
 	template<typename S = std::string, typename T>
 	std::enable_if_t<!std::is_floating_point_v<T>, S>
-	toString(const T& value, const FloatPrecision& floatPrecision = FloatPrecisionPreset::Normal) {
+	toString(const T& value, const FloatPrecision& floatPrecision = FloatPrecision::normal()) {
 		return stringstreamCast<S>(value);
 	}
 
