@@ -101,7 +101,7 @@ namespace GameLibrary::Console
 			}
 
 		private:
-			ValueType getDefault() const {
+			constexpr ValueType getDefault() const {
 				if constexpr (std::is_same_v<ValueType, String>)
 					return "";
 				else
