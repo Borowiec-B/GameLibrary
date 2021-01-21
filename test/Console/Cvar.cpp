@@ -66,6 +66,7 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 		REQUIRE(c.getAs<double>() == Approx(128.999));
 
 		c.set("String");
+
 		REQUIRE(c.getAsString() == "String");
 
 		c.set(std::numeric_limits<float>::infinity());
