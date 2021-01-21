@@ -2,6 +2,7 @@
 build/
 
 # Personal build-helpers.
+.session.vim
 .targets
 .target.sh
 
