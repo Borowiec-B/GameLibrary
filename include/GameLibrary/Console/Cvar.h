@@ -43,7 +43,6 @@ namespace GameLibrary::Console
 		 *  Value: Cvar's class for managing a raw value.
 		 * 		   Currently primary function is get/set functionality, with setter converting a wide range of types into ValueType.
 		 */
-
 		template<typename VT>
 		class Value {
 			using ValueType = VT;
