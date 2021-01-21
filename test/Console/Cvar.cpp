@@ -17,7 +17,10 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 {
 	SECTION("Float Cvar")
 	{
-		Cvar c(Cvar::ValueType::Float, std::numeric_limits<std::int16_t>::min());
+		Cvar c(Cvar::ValueType::Float);
+		REQUIRE(c.getAs<long double>() == Approx(0));
+
+		c.set(std::numeric_limits<std::int16_t>::min());
 
 		REQUIRE_THAT(c.getAsString(), StartsWith("-32768"));
 		REQUIRE(c.getAs<int>() == -32768);
@@ -36,7 +39,10 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 
 	SECTION("Integer Cvar")
 	{
-		Cvar c(Cvar::ValueType::Integer, -1.999);
+		Cvar c(Cvar::ValueType::Integer);
+		REQUIRE(c.getAs<int>() == 0);
+
+		c.set(-1.999);
 
 		REQUIRE(c.getAsString() == "-1");
 		REQUIRE(c.getAs<char>() == -1);
@@ -50,7 +56,10 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 
 	SECTION("String Cvar")
 	{
-		Cvar c(Cvar::ValueType::String, 128.999);
+		Cvar c(Cvar::ValueType::String);
+		REQUIRE(c.getAsString() == "");
+
+		c.set(128.999);
 
 		REQUIRE_THAT(c.getAsString(), StartsWith("128.999"));
 		REQUIRE(c.getAs<int>() == 128);
