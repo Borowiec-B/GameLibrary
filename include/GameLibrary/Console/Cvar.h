@@ -120,22 +120,9 @@ namespace GameLibrary::Console
 		 */
 		class AnyValue {
 		public:
-			template<typename T>
-			AnyValue(const ValueType type, T&& initialValue) {
-				switch (type) {
-					case ValueType::Float:
-						_anyValue = FloatValue(std::forward<T>(initialValue));
-						break;
-					case ValueType::Integer:
-						_anyValue = IntegerValue(std::forward<T>(initialValue));
-						break;
-					case ValueType::String:
-						_anyValue = StringValue(std::forward<T>(initialValue));
-						break;
-					default:
-						throw Exceptions::InvalidArgument("AnyValue::AnyValue() failed, unknown type supplied.");
-						break;
-				}
+			template<typename... Args>
+			AnyValue(const ValueType type, Args&&... initialValue) {
+				initValue(type, std::forward<Args>(initialValue)...);
 			}
 
 			template<typename T>
@@ -159,6 +146,24 @@ namespace GameLibrary::Console
 			}
 
 		private:
+			template<typename... Args>
+			void initValue(const ValueType type, Args&&... ctorArgs) {
+				switch (type) {
+					case ValueType::Float:
+						_anyValue = FloatValue(std::forward<Args>(ctorArgs)...);
+						break;
+					case ValueType::Integer:
+						_anyValue = IntegerValue(std::forward<Args>(ctorArgs)...);
+						break;
+					case ValueType::String:
+						_anyValue = StringValue(std::forward<Args>(ctorArgs)...);
+						break;
+					default:
+						throw Exceptions::InvalidArgument("AnyValue::initValue() failed, unknown type supplied.");
+						break;
+				}
+			}
+
 			std::variant<FloatValue, IntegerValue, StringValue> _anyValue;
 		};
 
