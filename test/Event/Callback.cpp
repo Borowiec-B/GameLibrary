@@ -10,7 +10,7 @@ using namespace GameLibrary::Event;
 
 
 struct TestEvent : public BaseEvent {
-	bool* callIndicator = NULL;
+	bool* callIndicator = nullptr;
 };
 static const char*	valid1(TestEvent e) { *(e.callIndicator) = true; return "success"; }
 static float		valid2(const TestEvent& e) { *(e.callIndicator) = true; return 0; }
