@@ -8,7 +8,7 @@ set(test_target ${test_target} PARENT_SCOPE)
 set(test_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 append_prefixed_items_to_list("${test_source_dir}/" test_source_files main.cpp)
-append_prefixed_items_to_list("${test_source_dir}/Event/" test_source_files Callback.cpp Traits.cpp)
+append_prefixed_items_to_list("${test_source_dir}/Event/" test_source_files AnyCallback.cpp Callback.cpp Traits.cpp)
 
 
 find_package(Catch2 REQUIRED)
