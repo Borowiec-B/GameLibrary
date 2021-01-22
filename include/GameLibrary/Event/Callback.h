@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <variant>
 
 #include "GameLibrary/Event/Traits.h"
 
@@ -10,18 +11,23 @@ namespace GameLibrary::Event
 	template<typename E, typename = IsEvent<E>>
 	class Callback
 	{
+		using NoParamsCB = std::function<void()>;
+		using EventParamCB = std::function<void(const E&)>;
 	public:
-		using CB = std::function<void(const E&)>;
+		using CBVariant = std::variant<NoParamsCB, EventParamCB>;
 
-		Callback(CB func) : _func(std::move(func)) {
+		Callback(CBVariant func) : _cbVariant(std::move(func)) {
 		}
 
 		auto operator() (const E& event) {
-			return _func(event);
+			if (std::holds_alternative<NoParamsCB>(_cbVariant))
+				std::get<NoParamsCB>(_cbVariant)();
+			else if (std::holds_alternative<EventParamCB>(_cbVariant))
+				std::get<EventParamCB>(_cbVariant)(event);
 		}
 
 	private:
-		CB _func;
+		CBVariant _cbVariant;
 	};
 }
 

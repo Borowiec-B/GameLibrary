@@ -12,24 +12,47 @@ using namespace GameLibrary::Event;
 struct TestEvent : public BaseEvent {
 	bool* callIndicator = NULL;
 };
-
 static const char*	valid1(TestEvent e) { *(e.callIndicator) = true; return "success"; }
 static float		valid2(const TestEvent& e) { *(e.callIndicator) = true; return 0; }
 static auto			valid3 = [ ] ( const TestEvent& e ) { *(e.callIndicator) = true; return true; };
 
-TEST_CASE("Event Callback stores functions taking an event parameter and calls them.")
+static bool			callIndicator = false;
+static void			valid4() { callIndicator = true; }
+static auto			valid5 = [ ] { callIndicator = true; };
+
+
+TEST_CASE("Event Callback stores a function taking no parameters or an event, and calls it.")
 {
-	std::vector<Callback<TestEvent>> callbacks = { Callback<TestEvent>(valid1), Callback<TestEvent>(valid2), Callback<TestEvent>(valid3) };
-	
-	for (auto& callback : callbacks)
+	SECTION("Callback stores and calls functions taking an event.")
 	{
-		bool callbackWasCalled = false;
+		std::vector<Callback<TestEvent>> callbacks = { Callback<TestEvent>(valid1), Callback<TestEvent>(valid2), Callback<TestEvent>(valid3) };
+		
+		for (auto& callback : callbacks)
+		{
+			bool callbackWasCalled = false;
 
-		TestEvent e;
-		e.callIndicator = &callbackWasCalled;
+			TestEvent e;
+			e.callIndicator = &callbackWasCalled;
 
-		callback(e);
+			callback(e);
 
-		REQUIRE(callbackWasCalled);
+			REQUIRE(callbackWasCalled);
+		}
+	}
+
+	SECTION("Callback stores and calls functions taking no parameters.")
+	{
+		std::vector<Callback<TestEvent>> callbacks = { Callback<TestEvent>(valid4), Callback<TestEvent>(valid5) };
+
+		for (auto& callback : callbacks)
+		{
+			callIndicator = false;
+
+			// Even if callback stores a no-parameters function, it takes an event.
+			callback(TestEvent{});
+
+			REQUIRE(callIndicator);
+		}
 	}
 }
+
