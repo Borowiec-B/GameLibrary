@@ -40,7 +40,7 @@ namespace GameLibrary::Utilities::Conversions
 		}
 
 		template<typename F>
-		constexpr auto get() const {
+		constexpr auto get() const noexcept {
 			if (isMax())
 				return std::numeric_limits<F>::max_digits10;
 			else
