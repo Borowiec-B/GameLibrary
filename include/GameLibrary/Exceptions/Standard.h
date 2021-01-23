@@ -13,8 +13,7 @@ namespace GameLibrary::Exceptions
 		using std::runtime_error::runtime_error;
 	};
 
-	class InvalidArgument : public std::invalid_argument
-	{
+	class InvalidArgument : public std::invalid_argument {
 		using std::invalid_argument::invalid_argument;
 	};
 }
