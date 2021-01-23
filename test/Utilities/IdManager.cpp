@@ -29,3 +29,26 @@ TEST_CASE("SequentialIdManager returns sequentially generated ids, immediately r
 		}
 	}
 
+	SECTION("SequentialIdManager immediately reuses freed ids.")
+	{
+		SequentialIdManager<int> mgr;
+		constexpr int numIds = 100;
+
+		// Get some ids.
+		std::set<int> usedIds;
+		for (int i = 0; i < numIds; ++i)
+			usedIds.emplace(mgr.get());
+
+		// Free all those ids.
+		for (const auto id : usedIds)
+			mgr.free(id);
+
+		// Get some ids again. Make sure they're the same ones.
+		std::set<int> reusedIds;
+		for (int i = 0; i < numIds; ++i)
+			reusedIds.emplace(mgr.get());
+
+		REQUIRE(usedIds == reusedIds);
+	}
+}
+

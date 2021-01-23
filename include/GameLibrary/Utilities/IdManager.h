@@ -31,6 +31,36 @@ namespace GameLibrary::Utilities
 		SequentialIdManager() : SequentialIdManager(0) {}
 
 		virtual Id get() override {
+			if (freeIdAvailable())
+				return reuseFreeId();
+			else
+				return generateNewId();
+		}
+
+		virtual void free(const Id id) override {
+			// Do nothing if id is not in use.
+			if (_usedIds.find(id) != std::end(_usedIds))
+			{
+				_usedIds.erase(id);
+				_freedIds.push(id);
+			}
+		}
+
+	private:
+		bool freeIdAvailable() const noexcept(noexcept(_freedIds.empty())) {
+			return !_freedIds.empty();
+		}
+
+		Id reuseFreeId() {
+			if (_freedIds.empty())
+				throw Exceptions::NotFoundError("SequentialIdManager::reuseFreeId() failed: No freed Ids available.");
+
+			const auto ret = _freedIds.top();
+			_freedIds.pop();
+			return ret;
+		}
+
+		Id generateNewId() {
 			if (additionWillOverflow(_nextId, _step))
 			{
 				auto message = compose<std::string>("SequentialIdManager::get() failed: Next id would over- or underflow. \
@@ -46,13 +76,10 @@ namespace GameLibrary::Utilities
 			return ret;
 		}
 
-		virtual void free(const Id id) override {
-		}
-
-	private:
 		Id			   _nextId;
 		Step		   _step;
 
+		std::stack<Id> _freedIds;
 		std::set<Id>   _usedIds;
 	};
 }
