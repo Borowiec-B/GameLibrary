@@ -5,7 +5,14 @@
 #include "catch2/catch.hpp"
 
 using namespace GameLibrary::Utilities;
+using Catch::Matchers::StartsWith;
 
+
+TEST_CASE("Compose() creates a string from arguments.")
+{
+	REQUIRE_THAT(compose<std::string>(100, " hundred ", 100.123), StartsWith("100 hundred 100.123"));
+	REQUIRE(compose<std::wstring>(L"beg ", 0, std::wstring(L" end")) == L"beg 0 end");
+}
 
 TEST_CASE("Surround() works with std::string, std::wstring, and their literals.")
 {

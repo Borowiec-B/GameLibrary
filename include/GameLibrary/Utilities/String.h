@@ -1,10 +1,20 @@
 #pragma once
 
+#include "GameLibrary/Utilities/Conversions/String.h"
 #include "GameLibrary/Utilities/Conversions/StringToSstream.h"
 
 
 namespace GameLibrary::Utilities
 {
+	template<typename S, typename... Args>
+	S compose(Args&&... args) {
+		auto stream = Conversions::stringToOstringstream<S>();
+		
+		(stream << ... << Conversions::toString<S>(std::forward<Args>(args)));
+
+		return stream.str();
+	}
+
 	template<typename S1, typename S2>
 	S1 surround(const S1& str, const S2& surrounder) {
 		auto stream = Conversions::stringToOstringstream<S1>();
