@@ -35,6 +35,11 @@ namespace GameLibrary::Event
 			return key;
 		}
 
+		void removeCallback(const Key key) {
+			for (auto& [_, keysToCallbacks] : _callbacks)
+				keysToCallbacks.erase(key);
+		}
+
 		template<typename E>
 		std::enable_if_t<IsEventV<E>, void>
 		dispatchEvent(const E& event) {
