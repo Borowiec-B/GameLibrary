@@ -13,7 +13,7 @@ using namespace GameLibrary::Console;
 using Catch::Matchers::StartsWith;
 
 
-TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer getters not implemented yet.)")
+TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer getters not implemented yet.)", "[console]")
 {
 	SECTION("Float Cvar")
 	{
