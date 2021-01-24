@@ -4,10 +4,13 @@
 
 #include "catch2/catch.hpp"
 
+#include "GameLibrary/Exceptions/Standard.h"
+
+using namespace GameLibrary;
 using namespace GameLibrary::Utilities;
 
 
-TEST_CASE("SequentialIdManager returns sequentially generated ids, immediately reuses freed ids, and throws on overflows.")
+TEST_CASE("SequentialIdManager returns sequentially generated ids, and immediately reuses freed ids.")
 {
 	SECTION("Each get() SequentialIdManager returns previous id incremented by step.")
 	{
@@ -50,5 +53,21 @@ TEST_CASE("SequentialIdManager returns sequentially generated ids, immediately r
 
 		REQUIRE(usedIds == reusedIds);
 	}
+}
+
+TEMPLATE_TEST_CASE("SequentialIdManager::get() throws only if it would cause its Id type to overflow.", "[utilities]", char, unsigned char, short, unsigned short)
+{
+	SequentialIdManager<TestType> overflowingMgr(0, 10);
+	SequentialIdManager<TestType> underflowingMgr(0, -1);
+
+	// Keep getting() until there are enough ids generated for (current_id + step) to over/undeflow.
+	for (TestType i = 0; i < std::numeric_limits<TestType>::max()/10; ++i)
+		overflowingMgr.get();
+	for (TestType i = 0; i > std::numeric_limits<TestType>::lowest(); --i)
+		underflowingMgr.get();
+
+	// Managers' ids are currently close enough to their types' limits for get() to over/underflow.
+	REQUIRE_THROWS_AS(overflowingMgr.get(), Exceptions::OverflowError);
+	REQUIRE_THROWS_AS(underflowingMgr.get(), Exceptions::OverflowError);
 }
 
