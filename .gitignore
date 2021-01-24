@@ -1,9 +1,9 @@
 .git/
 build/
 
-# Personal build-helpers.
-.session.vim
+# Personal workflow.
 .targets
 .target.sh
+.session.vim
 
 compile_commands.json
