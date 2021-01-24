@@ -13,7 +13,7 @@ template<typename T>
 using nl = std::numeric_limits<T>;
 
 
-TEST_CASE("safeArithmeticCast() returns expected results.")
+TEST_CASE("safeArithmeticCast() returns expected results.", "[conversions][utilities]")
 {
 	constexpr uint64_t int8Max = nl<int8_t>::max();
 	constexpr int32_t int16Min = nl<int16_t>::min();

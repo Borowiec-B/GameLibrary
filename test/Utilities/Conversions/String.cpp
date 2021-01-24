@@ -12,7 +12,7 @@
 using namespace GameLibrary::Utilities::Conversions;
 
 
-TEST_CASE("FloatPrecision sets and returns custom precision, or max precision; throws on invalid precision.")
+TEST_CASE("FloatPrecision sets and returns custom precision, or max precision; throws on invalid precision.", "[conversions][utilities]")
 {
 	FloatPrecision one(1);
 
@@ -27,7 +27,7 @@ TEST_CASE("FloatPrecision sets and returns custom precision, or max precision; t
 	REQUIRE_THROWS_AS(FloatPrecision(-1), GameLibrary::Exceptions::InvalidArgument);
 }
 
-TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns resulting std::string/std::wstring.")
+TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns resulting std::string/std::wstring.", "[conversions][string][utilities]")
 {
 	SECTION("Float to String")
 	{
@@ -49,7 +49,7 @@ TEST_CASE("stringstreamCast() passes flags and objects to a stream, and returns 
 	}
 }
 
-TEST_CASE("From/to String converters return expected values, operating on std::string/std::wstring and arithmetic types.")
+TEST_CASE("From/to String converters return expected values, operating on std::string/std::wstring and arithmetic types.", "[conversions][string][utilities]")
 {
 	SECTION("To String")
 	{

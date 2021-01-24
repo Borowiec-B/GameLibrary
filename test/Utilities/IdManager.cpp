@@ -10,7 +10,7 @@ using namespace GameLibrary;
 using namespace GameLibrary::Utilities;
 
 
-TEST_CASE("SequentialIdManager returns sequentially generated ids, and immediately reuses freed ids.")
+TEST_CASE("SequentialIdManager returns sequentially generated ids, and immediately reuses freed ids.", "[utilities]")
 {
 	SECTION("Each get() SequentialIdManager returns previous id incremented by step.")
 	{

@@ -9,7 +9,7 @@ using namespace GameLibrary;
 using namespace GameLibrary::Utilities::Conversions;
 
 
-TEST_CASE("arithmeticOrStringCast() sticks to guidelines (calls correct casting functions).")
+TEST_CASE("arithmeticOrStringCast() sticks to guidelines (calls correct casting functions).", "[conversions][string][utilities]")
 {
 	REQUIRE(arithmeticOrStringCast<int>(1.9999) == safeArithmeticCast<int>(1.9999));
 	REQUIRE(arithmeticOrStringCast<std::wstring>(std::numeric_limits<float>::infinity(), FloatPrecision(10)) ==

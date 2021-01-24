@@ -8,13 +8,13 @@ using namespace GameLibrary::Utilities;
 using Catch::Matchers::StartsWith;
 
 
-TEST_CASE("Compose() creates a string from arguments.")
+TEST_CASE("Compose() creates a string from arguments.", "[string][utilities]")
 {
 	REQUIRE_THAT(compose<std::string>(100, " hundred ", 100.123), StartsWith("100 hundred 100.123"));
 	REQUIRE(compose<std::wstring>(L"beg ", 0, std::wstring(L" end")) == L"beg 0 end");
 }
 
-TEST_CASE("Surround() works with std::string, std::wstring, and their literals.")
+TEST_CASE("Surround() works with std::string, std::wstring, and their literals.", "[string][utilities]")
 {
 	SECTION("std::string")
 	{
@@ -41,7 +41,7 @@ TEST_CASE("Surround() works with std::string, std::wstring, and their literals."
 	}
 }
 
-TEST_CASE("Quote() matches behavior of surround() with quotation mark argument.")
+TEST_CASE("Quote() matches behavior of surround() with quotation mark argument.", "[string][utilities]")
 {
 	REQUIRE(quote("str") == surround("str", '"'));
 	REQUIRE(quote(L"str") == surround(L"str", L'"'));

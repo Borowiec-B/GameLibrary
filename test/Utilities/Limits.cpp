@@ -7,7 +7,7 @@
 using namespace GameLibrary::Utilities;
 
 
-TEST_CASE("additionWillOverflow(x, y) returns true if (x + y) would over- or underflow x's type; false otherwise")
+TEST_CASE("additionWillOverflow(x, y) returns true if (x + y) would over- or underflow x's type; false otherwise", "[utilities]")
 {
 	const std::int8_t minusSixToUnderflow = std::numeric_limits<std::int8_t>::lowest() + 5;
 	const unsigned short sixToOverflow = std::numeric_limits<unsigned short>::max() - 5;
