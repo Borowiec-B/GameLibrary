@@ -8,6 +8,10 @@
 
 using namespace GameLibrary::Event;
 
+/*
+ *  To do:
+ *    - Clean up this terrible file.
+ */
 
 struct TestEvent : public BaseEvent {
 	bool* callIndicator = nullptr;
