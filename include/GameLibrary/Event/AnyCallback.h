@@ -3,6 +3,7 @@
 #include <any>
 
 #include "GameLibrary/Event/Callback.h"
+#include "GameLibrary/Exceptions/Standard.h"
 
 
 namespace GameLibrary::Event
@@ -19,9 +20,16 @@ namespace GameLibrary::Event
 
 		template<typename E>
 		auto operator() (const E& event) {
-			auto& extractedCallback = std::any_cast<Callback<E>&>(_callback);
+			try
+			{
+				auto& extractedCallback = std::any_cast<Callback<E>&>(_callback);
+				return extractedCallback(event);
+			}
+			catch (const std::bad_any_cast&)
+			{
+				throw Exceptions::InvalidArgument("Event::AnyCallback::() failed: Supplied event is incompatible with stored callback.");
+			}
 
-			return extractedCallback(event);
 		}
 
 	private:

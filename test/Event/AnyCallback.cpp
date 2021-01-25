@@ -3,7 +3,9 @@
 #include "catch2/catch.hpp"
 
 #include "GameLibrary/Event/BaseEvent.h"
+#include "GameLibrary/Exceptions/Standard.h"
 
+using namespace GameLibrary;
 using namespace GameLibrary::Event;
 
 
@@ -33,5 +35,13 @@ TEST_CASE("AnyCallback wraps Callback<E> and mimics its interface.")
 
 	REQUIRE(parameterCallStatus);
 	REQUIRE(noParameterCallStatus);
+}
+
+TEST_CASE("AnyCallback throws on invalid call arguments.")
+{
+	AnyCallback callback = AnyCallback::create<struct DummyEvent>([] {});
+	
+	struct InvalidEvent {};
+	REQUIRE_THROWS_AS(callback(InvalidEvent{}), Exceptions::InvalidArgument);
 }
 
