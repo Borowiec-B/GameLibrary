@@ -8,6 +8,10 @@
 
 namespace GameLibrary::Event
 {
+	/*
+	 *  Callback: Wrapper for function considered a callback for event type E.
+	 *			  Can be created from a variety of signatures - refer to type aliases.
+	 */
 	template<typename E, typename = IsEvent<E>>
 	class Callback
 	{
