@@ -25,7 +25,7 @@ static void			valid4() { callIndicator = true; }
 static auto			valid5 = [ ] { callIndicator = true; };
 
 
-TEST_CASE("Event Callback stores a function taking no parameters or an event, and calls it.")
+TEST_CASE("Callback stores a function taking no parameters or an event, and calls it.")
 {
 	SECTION("Callback stores and calls functions taking an event.")
 	{
