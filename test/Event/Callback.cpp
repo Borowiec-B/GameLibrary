@@ -56,3 +56,27 @@ TEST_CASE("Event Callback stores a function taking no parameters or an event, an
 	}
 }
 
+TEST_CASE("If Callback contains a predicate, call will happen only if it passes for supplied event.")
+{
+	struct BoolEvent : public BaseEvent {
+		bool value;
+	};
+	auto pred = [ ] ( const BoolEvent& e ) { return e.value; };
+
+	BoolEvent passing;
+	passing.value = true;
+	BoolEvent notPassing;
+	notPassing.value = false;
+
+	// valid4() sets callIndicator to true.
+	Callback<BoolEvent> callIndicatorSetter(valid4, pred);
+
+	callIndicator = false;
+	callIndicatorSetter(passing);
+	REQUIRE(callIndicator);
+
+	callIndicator = false;
+	callIndicatorSetter(notPassing);
+	REQUIRE_FALSE(callIndicator);
+}
+
