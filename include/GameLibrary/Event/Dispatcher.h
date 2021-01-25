@@ -38,6 +38,8 @@ namespace GameLibrary::Event
 		void removeCallback(const Key key) {
 			for (auto& [_, keysToCallbacks] : _callbacks)
 				keysToCallbacks.erase(key);
+
+			_idMgr.free(key);
 		}
 
 		template<typename E>
