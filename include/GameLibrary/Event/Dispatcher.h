@@ -56,12 +56,7 @@ namespace GameLibrary::Event
 		 *  removeCallback(): Remove callback referred to by key, and allow key to be returned by future addCallback().
 		 *					  Currently has no effect if key is not in use.
 		 */
-		void removeCallback(const Key key) {
-			for (auto& [_, keysToCallbacks] : _callbacks)
-				keysToCallbacks.erase(key);
-
-			_idMgr.free(key);
-		}
+		void removeCallback(const Key key);
 
 		/*
 		 *  dispatchEvent(): Call all callbacks registered for event type E, passing event as argument if signature allows it.
