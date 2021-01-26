@@ -9,12 +9,12 @@ using namespace GameLibrary;
 using namespace GameLibrary::Event;
 
 
-struct TestEvent : BaseEvent {
-	bool* indicator = nullptr;
-};
-
 TEST_CASE("AnyCallback wraps Callback<E> and mimics its interface.")
 {
+	struct TestEvent : BaseEvent {
+		bool* indicator = nullptr;
+	};
+
 	bool parameterCallStatus = false;
 	bool noParameterCallStatus = false;
 	
