@@ -8,9 +8,15 @@
 
 namespace GameLibrary::Event
 {
+	/*
+	 *  AnyCallback: Non-parameterized wrapper for Callback<E>, used for convenient storing.
+	 */
 	class AnyCallback
 	{
 	public:
+		/*
+		 *  create(): Construct an AnyCallback. Args... are forwarded to Callback<E> constructor.
+		 */
 		template<typename E, typename... Args>
 		static AnyCallback create(Args&&... args) {
 			Callback<E> callbackToWrap(std::forward<Args>(args)...);
@@ -18,6 +24,12 @@ namespace GameLibrary::Event
 			return AnyCallback(std::move(callbackToWrap));
 		}
 
+		/*
+		 *  operator(): Pass event to held Callback. Callback may hold an event predicate - potentially stopping the call early.
+		 *
+		 *  Throws:
+		 *    - InvalidArgument if event is incompatible with held Callback.
+		 */
 		template<typename E>
 		auto operator() (const E& event) {
 			try
