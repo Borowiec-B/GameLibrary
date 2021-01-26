@@ -47,7 +47,10 @@ namespace GameLibrary::Event
 
 			const auto insertSuccess = _callbacks[typeid(E)].try_emplace(key, std::move(callback)).second;
 			if (!insertSuccess)
+			{
+				_idMgr.free(key);
 				throw Exceptions::CreationError("Event::Dispatcher::addCallback() failed: Insertion didn't take place.");
+			}
 
 			return key;
 		}
