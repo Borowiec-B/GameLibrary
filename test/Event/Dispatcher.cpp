@@ -51,7 +51,7 @@ TEST_CASE("Dispatcher accepts any Event callbacks, and dispatches event to all r
 	REQUIRE(ownedCallCount == callbacksCount);
 }
 
-TEST_CASE("Dispatcher removes free-standing and owned callbacks.")
+TEST_CASE("Dispatcher removes free-standing and owned callbacks.", "[event]")
 {
 	struct DummyEvent : BaseEvent {};
 	Dispatcher d;
