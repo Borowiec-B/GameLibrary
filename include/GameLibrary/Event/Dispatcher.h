@@ -20,6 +20,7 @@ namespace GameLibrary::Event
 	class Dispatcher
 	{
 	public:
+		using Id = int;
 		using Key = int;
 
 		/*
@@ -55,11 +56,22 @@ namespace GameLibrary::Event
 			return key;
 		}
 
+		template<typename E, typename F>
+		std::enable_if_t<IsEventV<E>, Key>
+		addOwnedCallback(Id owner, F&& func) {
+			const auto key = addCallback<E>(std::forward<F>(func));
+
+			_ownershipMap[owner].emplace_back(key);
+
+			return key;
+		}
+
 		/*
 		 *  removeCallback(): Remove callback referred to by key, and allow key to be returned by future addCallback().
 		 *					  Currently has no effect if key is not in use.
 		 */
 		void removeCallback(const Key key);
+		void removeCallbacks(const Id owner);
 
 		/*
 		 *  dispatchEvent(): Call all callbacks registered for event type E, passing event as argument if signature allows it.
@@ -79,6 +91,7 @@ namespace GameLibrary::Event
 			
 	private:
 		using KeyToCallbackMap = std::map<Key, AnyCallback>;
+		std::map<Id, std::vector<Key>> _ownershipMap;
 
 		std::map<std::type_index, KeyToCallbackMap> _callbacks;
 		Utilities::SequentialIdManager<Key>			_idMgr;
