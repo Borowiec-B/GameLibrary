@@ -74,6 +74,10 @@ namespace GameLibrary::Console
 			return id;
 		}
 
+		/*
+		 *  initCvars(): Add all Cvars returned by T::getCvars() to list of Cvars.
+		 *  			 T::getCvars() should return CvarCollection.
+		 */
 		template<typename T>
 		void initCvars() {
 			_cvars.merge(T::getCvars());
