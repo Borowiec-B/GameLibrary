@@ -2,6 +2,9 @@
 
 #include "catch2/catch.hpp"
 
+#include "GameLibrary/Exceptions/Standard.h"
+
+using namespace GameLibrary::Exceptions;
 using namespace GameLibrary::Console;
 
 
@@ -41,5 +44,41 @@ TEST_CASE("Console adds and removes ConsoleObject-deriving classes.")
 
 	c.removeObject(secondObjectId);
 	REQUIRE(latestMyClassDestructionStatus == 20);
+}
+
+TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on invalid getCvar().")
+{
+	struct CvarHolder1 {
+		static CvarCollection getCvars() {
+			CvarCollection ret;
+
+			ret.try_emplace("sv_cheats", Cvar::ValueType::Integer, 0);
+			ret.try_emplace("volume", Cvar::ValueType::Float, 1.5);
+
+			return ret;
+		};
+	};
+
+	struct CvarHolder2 {
+		static CvarCollection getCvars() {
+			CvarCollection ret;
+
+			ret.try_emplace("name", Cvar::ValueType::String, "default_name");
+			ret.try_emplace("group", Cvar::ValueType::String, "default_group");
+
+			return ret;
+		}
+	};
+
+	Console c;
+	c.initCvars<CvarHolder1, CvarHolder2>();
+
+	REQUIRE(c.getCvar("sv_cheats").getAs<int>() == 0);
+	REQUIRE(c.getCvar("volume").getAs<float>() == Approx(1.5));
+	REQUIRE(c.getCvar("name").getAsString() == "default_name");
+	REQUIRE(c.getCvar("group").getAsString() == "default_group");
+
+	REQUIRE_THROWS_AS(c.getCvar("invalid").getAsString(), NotFoundError);
+	REQUIRE_THROWS_AS(c.getCvar("invalid"), NotFoundError);
 }
 

@@ -2,13 +2,18 @@
 
 #include <map>
 #include <memory>
+#include <string>
 
+#include "GameLibrary/Console/Cvar.h"
 #include "GameLibrary/Utilities/IdManager.h"
+#include "GameLibrary/Utilities/String.h"
 
 
 namespace GameLibrary::Console
 {
 	using Id = int;
+	using String = std::string;
+	using CvarCollection = std::map<String, Cvar>;
 
 	/*
 	 *  ConsoleObject: Base class for classes with tight Console integration (provides support for e.g. event handling, member cvar/cmd callbacks).
@@ -68,12 +73,32 @@ namespace GameLibrary::Console
 			return id;
 		}
 
+		template<typename T>
+		void initCvars() {
+			_cvars.merge(T::getCvars());
+		}
+
+		template<typename T1, typename T2, typename... Ts>
+		void initCvars() {
+			initCvars<T1>();
+			initCvars<T2, Ts...>();
+		}
+
+		const Cvar& getCvar(const std::string& name) {
+			try {
+				return _cvars.at(name);
+			} catch (const Exceptions::NotFoundError&) {
+				throw Exceptions::NotFoundError(Utilities::compose("Console::getCvar() failed: Cvar \"", name, "\" not found."));
+			}
+		}
+
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
 		 */
 		void removeObject(const Id id);
 
 	private:
+		std::map<String, Cvar>				_cvars;
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
 		std::map<Id, ObjectPtr>				_objects;
 	};
