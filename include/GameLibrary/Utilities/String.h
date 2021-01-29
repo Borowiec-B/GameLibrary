@@ -6,7 +6,7 @@
 
 namespace GameLibrary::Utilities
 {
-	template<typename S, typename... Args>
+	template<typename S = std::string, typename... Args>
 	S compose(Args&&... args) {
 		auto stream = Conversions::stringToOstringstream<S>();
 		
