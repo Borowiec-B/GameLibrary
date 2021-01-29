@@ -5,6 +5,7 @@
 #include <string>
 
 #include "GameLibrary/Console/Cvar.h"
+#include "GameLibrary/Event/Dispatcher.h"
 #include "GameLibrary/Utilities/IdManager.h"
 #include "GameLibrary/Utilities/String.h"
 
@@ -84,13 +85,7 @@ namespace GameLibrary::Console
 			initCvars<T2, Ts...>();
 		}
 
-		const Cvar& getCvar(const std::string& name) {
-			try {
-				return _cvars.at(name);
-			} catch (const Exceptions::NotFoundError&) {
-				throw Exceptions::NotFoundError(Utilities::compose("Console::getCvar() failed: Cvar \"", name, "\" not found."));
-			}
-		}
+		const Cvar& getCvar(const std::string& name);
 
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
@@ -99,6 +94,7 @@ namespace GameLibrary::Console
 
 	private:
 		std::map<String, Cvar>				_cvars;
+		GameLibrary::Event::Dispatcher		_eventDispatcher;
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
 		std::map<Id, ObjectPtr>				_objects;
 	};
