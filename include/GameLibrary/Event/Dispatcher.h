@@ -56,10 +56,9 @@ namespace GameLibrary::Event
 			return key;
 		}
 
-		template<typename E, typename F>
-		std::enable_if_t<IsEventV<E>, Key>
-		addOwnedCallback(Id owner, F&& func) {
-			const auto key = addCallback<E>(std::forward<F>(func));
+		template<typename E, typename... Args>
+		Key addOwnedCallback(Id owner, Args&&... addCallbackArgs) {
+			const auto key = addCallback<E>(std::forward<Args>(addCallbackArgs)...);
 
 			_ownershipMap[owner].emplace_back(key);
 
