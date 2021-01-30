@@ -24,8 +24,9 @@ namespace GameLibrary::Event
 		using Key = int;
 
 		/*
-		 *  addCallback(): Add supplied function to list of callbacks called when dispatching any event of type E.
-		 *				   Function's signature requirements are: no parameters, or E / const E / const E& parameter.
+		 *  addCallback(): Add supplied function to list of callbacks called when dispatching event of type E.
+		 *  			   If predicate is supplied, callback will be called only if it passes with dispatched event.
+		 *				   Callback's signature requirements are: no parameters, or E / const E / const E& parameter.
 		 *
 		 *  Returns:
 		 *    - Key, used to refer to added callback in functions taking a key.
