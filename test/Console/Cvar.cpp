@@ -111,3 +111,14 @@ TEST_CASE("Cvar's getName() returns its name.")
 	REQUIRE(unnamed.getName() == "");
 }
 
+TEST_CASE("Cvar's description get/set functionality works as expected.")
+{
+	Cvar describedCvar("", Cvar::ValueType::Integer);
+	Cvar undescribedCvar("", Cvar::ValueType::Integer);
+
+	describedCvar.setDescription("Description.");
+
+	REQUIRE(describedCvar.getDescription() == "Description.");
+	REQUIRE(undescribedCvar.getDescription() == "");
+}
+

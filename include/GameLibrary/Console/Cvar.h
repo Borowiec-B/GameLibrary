@@ -175,6 +175,9 @@ namespace GameLibrary::Console
 			_value.set(std::forward<T>(newValue));
 		}
 
+		void setDescription(String newDescription);
+		const String& getDescription() const;
+
 		const String& getName() const;
 
 		template<typename T>
@@ -184,6 +187,7 @@ namespace GameLibrary::Console
 
 	private:
 		String _name;
+		String _description;
 		AnyValue _value;
 	};
 }

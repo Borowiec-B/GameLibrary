@@ -16,3 +16,11 @@ const String& Cvar::getName() const {
 	return _name;
 }
 
+void Cvar::setDescription(String newDescription) {
+	_description = std::move(newDescription);
+}
+
+const String& Cvar::getDescription() const {
+	return _description;
+}
+
