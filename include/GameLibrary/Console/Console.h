@@ -2,9 +2,9 @@
 
 #include <map>
 #include <memory>
-#include <string>
 
 #include "GameLibrary/Console/Cvar.h"
+#include "GameLibrary/Console/Types.h"
 #include "GameLibrary/Event/Dispatcher.h"
 #include "GameLibrary/Utilities/IdManager.h"
 #include "GameLibrary/Utilities/String.h"
@@ -12,9 +12,8 @@
 
 namespace GameLibrary::Console
 {
-	using Id = int;
-	using String = std::string;
 	using CvarCollection = std::map<String, Cvar>;
+	using Id = int;
 
 	/*
 	 *  ConsoleObject: Base class for classes with tight Console integration (provides support for e.g. event handling, member cvar/cmd callbacks).

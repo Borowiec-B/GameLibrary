@@ -3,9 +3,9 @@
 #include <cmath>
 #include <limits>
 #include <memory>
-#include <string>
 #include <type_traits>
 
+#include "GameLibrary/Console/Types.h"
 #include "GameLibrary/Utilities/Conversions/ArithmeticString.h"
 
 
@@ -32,10 +32,6 @@ namespace GameLibrary::Console
 			Integer,
 			String
 		};
-
-		using Float = long double;
-		using Integer = long long;
-		using String = std::string;
 
 	private:
 

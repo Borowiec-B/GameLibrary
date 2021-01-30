@@ -8,7 +8,7 @@ using namespace GameLibrary::Console;
 using namespace GameLibrary::Utilities;
 
 
-Cvar::String Cvar::getAsString() const {
+String Cvar::getAsString() const {
 	return _value.getAsString();
 }
 
