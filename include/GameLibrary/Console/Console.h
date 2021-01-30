@@ -89,6 +89,15 @@ namespace GameLibrary::Console
 			initCvars<T2, Ts...>();
 		}
 
+		template<typename T>
+		void setCvar(const String& name, T&& newValue) {
+			// To do: improve handling of invalid name.
+			if (_cvars.find(name) == std::end(_cvars))
+				return;
+
+			_cvars.at(name).set(std::forward<T>(newValue));
+		}
+
 		const Cvar& getCvar(const String& name);
 
 		/*

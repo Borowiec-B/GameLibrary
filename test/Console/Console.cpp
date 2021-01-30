@@ -82,3 +82,29 @@ TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on in
 	REQUIRE_THROWS_AS(c.getCvar("invalid"), NotFoundError);
 }
 
+TEST_CASE("Console sets Cvar values.")
+{
+	struct CvarHolder {
+		static CvarCollection getCvars() {
+			return { { "sv_cheats", Cvar::ValueType::Integer }, { "volume", Cvar::ValueType::Float }, { "name", Cvar::ValueType::String } };
+		}
+	};
+
+	Console c;
+	c.initCvars<CvarHolder>();
+
+	c.setCvar("sv_cheats", 10);
+	c.setCvar("volume", 0.55);
+	c.setCvar("name", "Player");
+
+	REQUIRE(c.getCvar("sv_cheats").getAs<int>() == 10);
+	REQUIRE(c.getCvar("volume").getAs<float>() == Approx(0.55));
+	REQUIRE(c.getCvar("name").getAsString() == "Player");
+
+	// Console should handle setCvar() exceptions by itself soon, this is just to confirm it's not implemented yet.
+	REQUIRE_THROWS(c.setCvar("sv_cheats", "invalid"));
+
+	// Setting non-existent Cvars should do nothing at the moment.
+	REQUIRE_NOTHROW(c.setCvar("invalid", 100));
+}
+
