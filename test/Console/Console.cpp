@@ -52,8 +52,8 @@ TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on in
 		static CvarCollection getCvars() {
 			CvarCollection ret;
 
-			ret.try_emplace("sv_cheats", Cvar::ValueType::Integer, 0);
-			ret.try_emplace("volume", Cvar::ValueType::Float, 1.5);
+			ret.try_emplace("sv_cheats", "sv_cheats", Cvar::ValueType::Integer, 0);
+			ret.try_emplace("volume", "volume", Cvar::ValueType::Float, 1.5);
 
 			return ret;
 		};
@@ -63,8 +63,8 @@ TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on in
 		static CvarCollection getCvars() {
 			CvarCollection ret;
 
-			ret.try_emplace("name", Cvar::ValueType::String, "default_name");
-			ret.try_emplace("group", Cvar::ValueType::String, "default_group");
+			ret.try_emplace("name", "name", Cvar::ValueType::String, "default_name");
+			ret.try_emplace("group", "group", Cvar::ValueType::String, "default_group");
 
 			return ret;
 		}
@@ -86,7 +86,13 @@ TEST_CASE("Console sets Cvar values.")
 {
 	struct CvarHolder {
 		static CvarCollection getCvars() {
-			return { { "sv_cheats", Cvar::ValueType::Integer }, { "volume", Cvar::ValueType::Float }, { "name", Cvar::ValueType::String } };
+			CvarCollection ret;
+
+			ret.try_emplace("sv_cheats", "sv_cheats", Cvar::ValueType::Integer);
+			ret.try_emplace("volume", "volume", Cvar::ValueType::Float);
+			ret.try_emplace("name", "name", Cvar::ValueType::String);
+
+			return ret;
 		}
 	};
 

@@ -165,8 +165,8 @@ namespace GameLibrary::Console
 
 	public:
 		template<typename T>
-		Cvar(const ValueType type, T&& initialValue) : _value(type, std::forward<T>(initialValue)) {}
-		Cvar(const ValueType type) : _value(type) {}
+		Cvar(String name, const ValueType type, T&& initialValue) : _name(name), _value(type, std::forward<T>(initialValue)) {}
+		Cvar(String name, const ValueType type) : _name(name), _value(type) {}
 
 		String getAsString() const;
 
@@ -175,12 +175,15 @@ namespace GameLibrary::Console
 			_value.set(std::forward<T>(newValue));
 		}
 
+		const String& getName() const;
+
 		template<typename T>
 		auto getAs() const {
 			return _value.getAs<T>();
 		}
 
 	private:
+		String _name;
 		AnyValue _value;
 	};
 }

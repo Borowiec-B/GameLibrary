@@ -12,3 +12,7 @@ String Cvar::getAsString() const {
 	return _value.getAsString();
 }
 
+const String& Cvar::getName() const {
+	return _name;
+}
+

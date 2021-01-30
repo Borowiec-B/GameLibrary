@@ -17,7 +17,7 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 {
 	SECTION("Float Cvar")
 	{
-		Cvar c(Cvar::ValueType::Float);
+		Cvar c("", Cvar::ValueType::Float);
 		REQUIRE(c.getAs<long double>() == Approx(0));
 
 		c.set(std::numeric_limits<std::int16_t>::min());
@@ -39,7 +39,7 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 
 	SECTION("Integer Cvar")
 	{
-		Cvar c(Cvar::ValueType::Integer);
+		Cvar c("", Cvar::ValueType::Integer);
 		REQUIRE(c.getAs<int>() == 0);
 
 		c.set(-1.999);
@@ -56,7 +56,7 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 
 	SECTION("String Cvar")
 	{
-		Cvar c(Cvar::ValueType::String);
+		Cvar c("", Cvar::ValueType::String);
 		REQUIRE(c.getAsString() == "");
 
 		c.set(128.999);
@@ -79,16 +79,16 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 
 	SECTION("Invalid inputs throw ConversionError and keep the value untouched")
 	{
-		REQUIRE_THROWS_AS(Cvar(Cvar::ValueType::Float, std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
-		REQUIRE_THROWS_AS(Cvar(Cvar::ValueType::Integer, std::numeric_limits<double>::infinity()), Exceptions::ConversionError);
+		REQUIRE_THROWS_AS(Cvar("", Cvar::ValueType::Float, std::numeric_limits<float>::quiet_NaN()), Exceptions::ConversionError);
+		REQUIRE_THROWS_AS(Cvar("", Cvar::ValueType::Integer, std::numeric_limits<double>::infinity()), Exceptions::ConversionError);
 
-		Cvar floatCvar(Cvar::ValueType::Float, 0);
+		Cvar floatCvar("", Cvar::ValueType::Float, 0);
 
 		REQUIRE_THROWS_AS(floatCvar.set(std::numeric_limits<long double>::quiet_NaN()), Exceptions::ConversionError);
 		REQUIRE_THROWS_AS(floatCvar.set(std::numeric_limits<long double>::infinity()), Exceptions::ConversionError);
 		REQUIRE(floatCvar.getAs<int>() == 0);
 
-		Cvar integerCvar(Cvar::ValueType::Integer, -1024);
+		Cvar integerCvar("", Cvar::ValueType::Integer, -1024);
 
 		REQUIRE_THROWS_AS(integerCvar.getAs<char>(), Exceptions::ConversionError);
 		REQUIRE_THROWS_AS(integerCvar.getAs<std::uint32_t>(), Exceptions::ConversionError);
@@ -96,9 +96,18 @@ TEST_CASE("Cvar sets and returns the correct value. (Wstring and char-pointer ge
 
 		REQUIRE(integerCvar.getAs<int>() == -1024);
 
-		Cvar stringCvar(Cvar::ValueType::String, "99999");
+		Cvar stringCvar("", Cvar::ValueType::String, "99999");
 
 		REQUIRE_THROWS_AS(stringCvar.getAs<std::int8_t>(), Exceptions::ConversionError);
 	}
+}
+
+TEST_CASE("Cvar's getName() returns its name.")
+{
+	Cvar sv_cheats("sv_cheats", Cvar::ValueType::Integer);
+	Cvar unnamed("", Cvar::ValueType::Float);
+
+	REQUIRE(sv_cheats.getName() == "sv_cheats");
+	REQUIRE(unnamed.getName() == "");
 }
 
