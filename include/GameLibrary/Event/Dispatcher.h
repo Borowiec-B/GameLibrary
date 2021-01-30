@@ -24,8 +24,9 @@ namespace GameLibrary::Event
 		using Key = int;
 
 		/*
-		 *  addCallback(): Add supplied function to list of callbacks called when dispatching any event of type E.
-		 *				   Function's signature requirements are: no parameters, or E / const E / const E& parameter.
+		 *  addCallback(): Add supplied function to list of callbacks called when dispatching event of type E.
+		 *  			   If predicate is supplied, callback will be called only if it passes with dispatched event.
+		 *				   Callback's signature requirements are: no parameters, or E / const E / const E& parameter.
 		 *
 		 *  Returns:
 		 *    - Key, used to refer to added callback in functions taking a key.
@@ -36,7 +37,7 @@ namespace GameLibrary::Event
 		 */
 		template<typename E, typename F>
 		std::enable_if_t<IsEventV<E>, Key>
-		addCallback(F&& func) {
+		addCallback(F&& func, std::optional<typename Callback<E>::Predicate> pred = std::nullopt) {
 			Key key;
 			try {
 				key = _idMgr.get();
@@ -44,7 +45,7 @@ namespace GameLibrary::Event
 				throw Exceptions::OverflowError("Event::Dispatcher::addCallback() failed: Key would overflow.");
 			}
 			
-			AnyCallback callback = AnyCallback::create<E>(std::forward<F>(func));
+			AnyCallback callback = AnyCallback::create<E>(std::forward<F>(func), pred);
 
 			const auto insertSuccess = _callbacks[typeid(E)].try_emplace(key, std::move(callback)).second;
 			if (!insertSuccess)
@@ -56,10 +57,9 @@ namespace GameLibrary::Event
 			return key;
 		}
 
-		template<typename E, typename F>
-		std::enable_if_t<IsEventV<E>, Key>
-		addOwnedCallback(Id owner, F&& func) {
-			const auto key = addCallback<E>(std::forward<F>(func));
+		template<typename E, typename... Args>
+		Key addOwnedCallback(Id owner, Args&&... addCallbackArgs) {
+			const auto key = addCallback<E>(std::forward<Args>(addCallbackArgs)...);
 
 			_ownershipMap[owner].emplace_back(key);
 

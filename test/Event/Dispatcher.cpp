@@ -85,3 +85,33 @@ TEST_CASE("Dispatcher removes free-standing and owned callbacks.", "[event]")
 	REQUIRE(callCount == 9);
 }
 
+TEST_CASE("On dispatchEvent(), callbacks with registered predicates will get called only if predicate returns true.", "[event]")
+{
+	struct BoolEvent : BaseEvent {
+		bool value = false;
+	};
+	bool callbackWasCalled = false;
+	bool ownedCallbackWasCalled = false;
+
+	auto setCallbackIndicator = [ &callbackWasCalled ] { callbackWasCalled = true; };
+	auto setOwnedCallbackIndicator = [ &ownedCallbackWasCalled ] { ownedCallbackWasCalled = true; };
+	auto boolEventIsTrue = [ ] ( const BoolEvent& e ) { return e.value; };
+
+	Dispatcher d;
+	// Add callback setCallbackIndicator() which gets called on dispatchEvent() only if boolEventIsTrue() is true for dispatched event.
+	d.addCallback<BoolEvent>(setCallbackIndicator, boolEventIsTrue);
+	d.addOwnedCallback<BoolEvent>(10, setOwnedCallbackIndicator, boolEventIsTrue);
+	
+	BoolEvent notPassingEvent { {}, false };
+	BoolEvent passingEvent { {}, true };
+
+	// setCallbackIndicator() and setOwnedCallbackIndicator() should be called only on successful dispatch.
+	d.dispatchEvent(notPassingEvent);
+	REQUIRE_FALSE(callbackWasCalled);
+	REQUIRE_FALSE(ownedCallbackWasCalled);
+
+	d.dispatchEvent(passingEvent);
+	REQUIRE(callbackWasCalled);
+	REQUIRE(ownedCallbackWasCalled);
+}
+
