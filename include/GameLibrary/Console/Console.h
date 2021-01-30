@@ -89,7 +89,7 @@ namespace GameLibrary::Console
 			initCvars<T2, Ts...>();
 		}
 
-		const Cvar& getCvar(const std::string& name);
+		const Cvar& getCvar(const String& name);
 
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.

@@ -5,7 +5,7 @@ using namespace GameLibrary::Console;
 
 ConsoleObject::ConsoleObject(Console& console, Id id) : _console(console), _id(id) {}
 
-const Cvar& Console::getCvar(const std::string& name) {
+const Cvar& Console::getCvar(const String& name) {
 	try {
 		return _cvars.at(name);
 	} catch (const std::out_of_range&) {
