@@ -36,7 +36,7 @@ namespace GameLibrary::Event
 		 */
 		template<typename E, typename F>
 		std::enable_if_t<IsEventV<E>, Key>
-		addCallback(F&& func) {
+		addCallback(F&& func, std::optional<typename Callback<E>::Predicate> pred = std::nullopt) {
 			Key key;
 			try {
 				key = _idMgr.get();
@@ -44,7 +44,7 @@ namespace GameLibrary::Event
 				throw Exceptions::OverflowError("Event::Dispatcher::addCallback() failed: Key would overflow.");
 			}
 			
-			AnyCallback callback = AnyCallback::create<E>(std::forward<F>(func));
+			AnyCallback callback = AnyCallback::create<E>(std::forward<F>(func), pred);
 
 			const auto insertSuccess = _callbacks[typeid(E)].try_emplace(key, std::move(callback)).second;
 			if (!insertSuccess)
