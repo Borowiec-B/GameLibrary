@@ -89,6 +89,13 @@ namespace GameLibrary::Console
 			initCvars<T2, Ts...>();
 		}
 
+		/*
+		 *  setCvar(): Set Cvar's value to newValue and call its listeners.
+		 *
+		 *  To do:
+		 *    - Maybe don't call listeners if Cvar's value doesn't change.
+		 *    - Handle Cvar::set() exceptions.
+		 */
 		template<typename T>
 		void setCvar(const String& name, T&& newValue) {
 			// To do: improve handling of invalid name.
