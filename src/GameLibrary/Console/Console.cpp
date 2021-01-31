@@ -16,5 +16,6 @@ const Cvar& Console::getCvar(const String& name) {
 void Console::removeObject(const Id id) {
 	_idMgr.free(id);
 	_objects.erase(id);
+	_eventDispatcher.removeCallbacks(id);
 }
 

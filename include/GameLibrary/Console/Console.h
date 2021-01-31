@@ -110,6 +110,16 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addCallback<CvarValueChangedEvent>(std::forward<F>(callback), std::move(cvarNameMatchesArgument));
 		}
 
+		template<typename F>
+		Event::Dispatcher::Key addOwnedCvarListener(const Id objectId, String cvarName, F&& callback) {
+			if (_objects.find(objectId) == std::end(_objects))
+				throw Exceptions::NotFoundError(Utilities::compose("Console::addMemberCvarListener() failed: Non-existent object id: ", objectId, "."));
+
+			auto cvarNameMatchesArgument = [ cvarName(std::move(cvarName)) ] ( const CvarValueChangedEvent& e ) { return e.cvar.getName() == cvarName; };
+
+			return _eventDispatcher.addOwnedCallback<CvarValueChangedEvent>(objectId, std::forward<F>(callback), std::move(cvarNameMatchesArgument));
+		}
+
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
 		 */

@@ -131,23 +131,53 @@ TEST_CASE("Console adds Cvar listeners and calls them on Cvar setter calls.")
 
 	c.initCvars<CvarHolder>();
 
-	Float volumeAfterChange = 0;
-	auto onVolumeChange = [ &volumeAfterChange ] ( const CvarValueChangedEvent& e ) {
-		volumeAfterChange = e.cvar.getAs<Float>();
-	};
+	SECTION("Non-owned callbacks")
+	{
+		Float volumeAfterChange = 0;
+		auto onVolumeChange = [ &volumeAfterChange ] ( const CvarValueChangedEvent& e ) {
+			volumeAfterChange = e.cvar.getAs<Float>();
+		};
 
-	String nameAfterChange = "";
-	auto onNameChange = [ &nameAfterChange ] ( const CvarValueChangedEvent& e ) {
-		nameAfterChange = e.cvar.getAsString();
-	};
+		String nameAfterChange = "";
+		auto onNameChange = [ &nameAfterChange ] ( const CvarValueChangedEvent& e ) {
+			nameAfterChange = e.cvar.getAsString();
+		};
 
-	c.addCvarListener("volume", onVolumeChange);
-	c.addCvarListener("name", onNameChange);
+		c.addCvarListener("volume", onVolumeChange);
+		c.addCvarListener("name", onNameChange);
 
-	c.setCvar("volume", 99.9);
-	c.setCvar("name", "Player");
+		c.setCvar("volume", 99.9);
+		c.setCvar("name", "Player");
 
-	REQUIRE(volumeAfterChange == Approx(99.9));
-	REQUIRE(nameAfterChange == "Player");
+		REQUIRE(volumeAfterChange == Approx(99.9));
+		REQUIRE(nameAfterChange == "Player");
+	}
+
+	SECTION("Owned callbacks")
+	{
+		struct CallbackOwner : public ConsoleObject {
+			CallbackOwner(Console& c, Id id) : ConsoleObject(c, id) {}
+		};
+		
+		const auto objectWithTwoCallbacks = c.addObject<CallbackOwner>();
+		const auto objectWithFiveCallbacks = c.addObject<CallbackOwner>();
+
+		int callCount = 0;
+		auto incrementCallCount = [ &callCount ] { ++callCount; };
+		
+		for (int i = 0; i < 2; ++i)
+			c.addOwnedCvarListener(objectWithTwoCallbacks, "volume", incrementCallCount);
+		for (int i = 0; i < 5; ++i)
+			c.addOwnedCvarListener(objectWithFiveCallbacks, "volume", incrementCallCount);
+
+		// One object has 2 callback incrementing callCount, another object has 5.
+		c.setCvar("volume", 1);
+		REQUIRE(callCount == 7);
+
+		// After removeObject(), only one object with five incrementers should remain.
+		callCount = 0;
+		c.removeObject(objectWithTwoCallbacks);
+		c.setCvar("volume", 1.5);
+		REQUIRE(callCount == 5);
+	}
 }
-
