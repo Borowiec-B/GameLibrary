@@ -103,6 +103,9 @@ namespace GameLibrary::Console
 
 		const Cvar& getCvar(const String& name);
 
+		/*
+		 *  addCvarListener(): Add callback to be called each time Cvar's setter is called.
+		 */
 		template<typename F>
 		Event::Dispatcher::Key addCvarListener(String name, F&& callback) {
 			auto cvarNameMatchesArgument = [ name(std::move(name)) ] ( const CvarValueChangedEvent& e ) { return e.cvar.getName() == name; };
