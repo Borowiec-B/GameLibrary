@@ -114,3 +114,40 @@ TEST_CASE("Console sets Cvar values.")
 	REQUIRE_NOTHROW(c.setCvar("invalid", 100));
 }
 
+TEST_CASE("Console adds Cvar listeners and calls them on Cvar setter calls.")
+{
+	Console c;
+
+	struct CvarHolder {
+		static CvarCollection getCvars() {
+			CvarCollection ret;
+
+			ret.try_emplace("volume", "volume", Cvar::ValueType::Float, 0);
+			ret.try_emplace("name", "name", Cvar::ValueType::String, "");
+
+			return ret;
+		};
+	};
+
+	c.initCvars<CvarHolder>();
+
+	Float volumeAfterChange = 0;
+	auto onVolumeChange = [ &volumeAfterChange ] ( const CvarValueChangedEvent& e ) {
+		volumeAfterChange = e.cvar.getAs<Float>();
+	};
+
+	String nameAfterChange = "";
+	auto onNameChange = [ &nameAfterChange ] ( const CvarValueChangedEvent& e ) {
+		nameAfterChange = e.cvar.getAsString();
+	};
+
+	c.addCvarListener("volume", onVolumeChange);
+	c.addCvarListener("name", onNameChange);
+
+	c.setCvar("volume", 99.9);
+	c.setCvar("name", "Player");
+
+	REQUIRE(volumeAfterChange == Approx(99.9));
+	REQUIRE(nameAfterChange == "Player");
+}
+

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "GameLibrary/Console/Cvar.h"
+#include "GameLibrary/Console/Events.h"
 #include "GameLibrary/Console/Types.h"
 #include "GameLibrary/Event/Dispatcher.h"
 #include "GameLibrary/Utilities/IdManager.h"
@@ -94,10 +95,20 @@ namespace GameLibrary::Console
 			if (_cvars.find(name) == std::end(_cvars))
 				return;
 
-			_cvars.at(name).set(std::forward<T>(newValue));
+			Cvar& target = _cvars.at(name);
+
+			target.set(std::forward<T>(newValue));
+			_eventDispatcher.dispatchEvent(CvarValueChangedEvent{{}, target});
 		}
 
 		const Cvar& getCvar(const String& name);
+
+		template<typename F>
+		Event::Dispatcher::Key addCvarListener(String name, F&& callback) {
+			auto cvarNameMatchesArgument = [ name(std::move(name)) ] ( const CvarValueChangedEvent& e ) { return e.cvar.getName() == name; };
+
+			return _eventDispatcher.addCallback<CvarValueChangedEvent>(std::forward<F>(callback), std::move(cvarNameMatchesArgument));
+		}
 
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
