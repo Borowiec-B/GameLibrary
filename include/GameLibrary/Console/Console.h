@@ -108,6 +108,12 @@ namespace GameLibrary::Console
 			_eventDispatcher.dispatchEvent(CvarValueChangedEvent{{}, target});
 		}
 
+		/*
+		 *  getCvar(): Return const reference to Cvar.
+		 *
+		 *  Throws:
+		 *    NotFoundError if Cvar doesn't exist.
+		 */
 		const Cvar& getCvar(const String& name);
 
 		/*
