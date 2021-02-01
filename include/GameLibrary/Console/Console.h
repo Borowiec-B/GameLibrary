@@ -44,6 +44,8 @@ namespace GameLibrary::Console
 	protected:
 		ConsoleObject(class Console& console, Id id);
 
+		virtual void onCreation() {}
+
 	private:
 		Console& _console;
 		const Id _id;
@@ -70,6 +72,8 @@ namespace GameLibrary::Console
 			ObjectPtr obj = std::make_unique<T>(*this, id, std::forward<Args>(ctorArgs)...);
 
 			_objects.try_emplace(id, std::move(obj));
+
+			_objects.at(id)->onCreation();
 
 			return id;
 		}
