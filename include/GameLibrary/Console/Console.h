@@ -134,6 +134,8 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addCallback<CvarValueChangedEvent>(std::forward<F>(callback), std::move(cvarNameMatchesArgument));
 		}
 
+		void removeCvarListener(const Event::Dispatcher::Key key);
+
 		/*
 		 *  addOwnedCvarListener(): Add callback to be called each time Cvar's setter is called, until object referenced by objectId is destroyed.
 		 *  						objectId must be an existing ConsoleObject.

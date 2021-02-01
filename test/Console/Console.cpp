@@ -114,7 +114,7 @@ TEST_CASE("Console sets Cvar values.")
 	REQUIRE_NOTHROW(c.setCvar("invalid", 100));
 }
 
-TEST_CASE("Console adds Cvar listeners and calls them on Cvar setter calls.")
+TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter calls.")
 {
 	Console c;
 
@@ -143,14 +143,27 @@ TEST_CASE("Console adds Cvar listeners and calls them on Cvar setter calls.")
 			nameAfterChange = e.cvar.getAsString();
 		};
 
-		c.addCvarListener("volume", onVolumeChange);
-		c.addCvarListener("name", onNameChange);
+		const auto key1 = c.addCvarListener("volume", onVolumeChange);
+		const auto key2 = c.addCvarListener("name", onNameChange);
 
 		c.setCvar("volume", 99.9);
 		c.setCvar("name", "Player");
 
 		REQUIRE(volumeAfterChange == Approx(99.9));
 		REQUIRE(nameAfterChange == "Player");
+
+		// Make sure callbacks don't get called after removing.
+		volumeAfterChange = 0;
+		nameAfterChange = "";
+
+		c.removeCvarListener(key1);
+		c.removeCvarListener(key2);
+
+		c.setCvar("volume", 1);
+		c.setCvar("name", "AnotherName");
+
+		REQUIRE(volumeAfterChange == 0);
+		REQUIRE(nameAfterChange == "");
 	}
 
 	SECTION("Owned callbacks")
