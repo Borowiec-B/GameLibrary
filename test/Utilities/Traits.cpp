@@ -33,3 +33,33 @@ std::string*, struct Dummy, int*)
 	REQUIRE_FALSE(IsArithmeticOrStringV<TestType>);
 }
 
+namespace
+{
+	int noParams();
+	void twoParams(int, float) {};
+}
+TEST_CASE("SingnatureInfo holds valid information; runtime helper function makeSignatureInfo() returns correct SignatureInfo.")
+{
+	struct S {
+		char method(int);
+	};
+
+	int dummyCapture = 0;
+	auto lambda = [ &dummyCapture ] ( std::string ) { return true; };
+
+	// Free functions
+	REQUIRE(argsCountV<decltype(noParams)> == 0);
+	REQUIRE(std::is_same_v<ReturnTypeT<decltype(noParams)>, int>);
+
+	REQUIRE(makeSignatureInfo(&twoParams).argsCount == 2);
+	REQUIRE(std::is_same_v<decltype(makeSignatureInfo(&twoParams))::ReturnType, void>);
+
+	// Member function
+	REQUIRE(argsCountV<decltype(&S::method)> == 1);
+	REQUIRE(std::is_same_v<ReturnTypeT<decltype(&S::method)>, char>);
+
+	// Lambda
+	REQUIRE(makeSignatureInfo(lambda).argsCount == 1);
+	REQUIRE(std::is_same_v<decltype(makeSignatureInfo(lambda))::ReturnType, bool>);
+}
+
