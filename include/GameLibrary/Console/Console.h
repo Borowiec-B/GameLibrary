@@ -45,6 +45,9 @@ namespace GameLibrary::Console
 	protected:
 		ConsoleObject(class Console& console, Id id);
 		
+		/*
+		 *  addMemberCvarListner(): Add member function to Console's list of callbacks called on Cvar change.
+		 */
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addMemberCvarListener(String cvarName, R(T::*method)(Params...));
 
