@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <map>
 #include <memory>
 
@@ -43,6 +44,9 @@ namespace GameLibrary::Console
 
 	protected:
 		ConsoleObject(class Console& console, Id id);
+		
+		template<typename T, typename R, typename... Params>
+		Event::Dispatcher::Key addMemberCvarListener(String cvarName, R(T::*method)(Params...));
 
 		virtual void onCreation() {}
 
@@ -158,5 +162,24 @@ namespace GameLibrary::Console
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
 		std::map<Id, ObjectPtr>				_objects;
 	};
+
+	template<typename T, typename R, typename... Params>
+	Event::Dispatcher::Key ConsoleObject::addMemberCvarListener(String cvarName, R(T::*method)(Params...)) {
+		constexpr auto paramsCount = sizeof...(Params);
+
+		static_assert(paramsCount == 0 || paramsCount == 1, "ConsoleObject::addMemberCvarListener() failed: Cvar listener must take 0 or 1 (event) argument.");
+
+		// Cvar listeners take either an event, or 0 arguments - use count of parameters to determine if placeholders::_1 should be placed.
+		if constexpr (paramsCount == 0)
+		{
+			std::function<R()> boundFunction = std::bind(std::move(method), static_cast<T*>(this));
+			return _console.addOwnedCvarListener(_id, std::move(cvarName), std::move(boundFunction));
+		}
+		else if (paramsCount == 1)
+		{
+			auto boundFunction = std::bind(std::move(method), static_cast<T*>(this), std::placeholders::_1);
+			return _console.addOwnedCvarListener(_id, std::move(cvarName), std::move(boundFunction));
+		}
+	}
 }
 

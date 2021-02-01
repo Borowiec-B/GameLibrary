@@ -180,4 +180,55 @@ TEST_CASE("Console adds Cvar listeners and calls them on Cvar setter calls.")
 		c.setCvar("volume", 1.5);
 		REQUIRE(callCount == 5);
 	}
+
+	SECTION("Member functions")
+	{
+		static int globalValue = 0;
+		static double volumeLastValue = 0;
+
+		// This class will tests two Cvar callback signatures: no parameters, and const Event& parameter.
+		class VolumeListener : public ConsoleObject {
+		public:
+			VolumeListener(Console& c, Id id, int value) : ConsoleObject(c, id), _value(value) { }
+
+			virtual void onCreation() override {
+				addMemberCvarListener("name", &VolumeListener::setGlobalValue);
+				addMemberCvarListener("volume", &VolumeListener::setVolumeValue);
+			}
+
+			void setGlobalValue() {
+				globalValue = _value;
+			}
+
+			void setVolumeValue(const CvarValueChangedEvent& e) {
+				volumeLastValue = e.cvar.getAs<double>();
+			}
+
+		private:
+			int _value;
+		};
+
+		const auto objectId = c.addObject<VolumeListener>(10);
+		
+		// This should make object added in previous statement call its setGlobalValue(), setting globalValue to 10.
+		c.setCvar("name", "Player.");
+		REQUIRE(globalValue == 10);
+
+		// VolumeListener sets volumeLastValue to Cvar's value on "volume" Cvar change.
+		c.setCvar("volume", 100);
+		REQUIRE(volumeLastValue == Approx(100));
+
+
+		// Make sure callbacks do not get called after object is removed.
+		globalValue = 0;
+		volumeLastValue = 0;
+
+		c.removeObject(objectId);
+
+		c.setCvar("name", "Player.");
+		c.setCvar("volume", 100);
+
+		REQUIRE(globalValue == 0);
+		REQUIRE(volumeLastValue == 0);
+	}
 }
