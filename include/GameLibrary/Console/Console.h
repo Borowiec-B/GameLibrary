@@ -48,6 +48,12 @@ namespace GameLibrary::Console
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addMemberCvarListener(String cvarName, R(T::*method)(Params...));
 
+		/*
+		 *  onCreation(): Console-centric constructor, will be called almost immediately after constructor if object is created through Console.
+		 *
+		 *  			  During all of regular construction, Object is not in Console's list of objects - leading to many exceptions.
+		 *  			  Object is added to list immediately after constructor, then onCreation() is called.
+		 */
 		virtual void onCreation() {}
 
 	private:
