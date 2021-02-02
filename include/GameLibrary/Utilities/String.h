@@ -51,6 +51,12 @@ namespace GameLibrary::Utilities
 			return std::isspace(c);
 	}
 
+	/*
+	 *  getNextWord(): Return iterator pair delimiting next word in relation to begin.
+	 *
+	 *				   First iterator points to first character of word.
+	 *  			   Second iterator points to one position past word's last character.
+	 */
 	template<typename It>
 	std::pair<It, It> getNextWord(const It begin, const It end) {
 		It wordBegin = begin;
