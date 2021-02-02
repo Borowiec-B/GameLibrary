@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <cwctype>
+#include <utility>
 
 #include "GameLibrary/Utilities/Conversions/String.h"
 #include "GameLibrary/Utilities/Conversions/StringToSstream.h"
@@ -48,6 +49,22 @@ namespace GameLibrary::Utilities
 			return std::iswspace(c);
 		else
 			return std::isspace(c);
+	}
+
+	template<typename It>
+	std::pair<It, It> getNextWord(const It begin, const It end) {
+		It wordBegin = begin;
+
+		// If begin already points at a word (not whitespace), skip to the end of that word.
+		if (!isWhitespace(*wordBegin))
+			wordBegin = std::find_if(wordBegin, end, isWhitespace<typename It::value_type>);
+
+		// wordBegin must be pointing at whitespace or end at this point.
+		// Move it to next non-whitespace character, and wordEnd to next whitespace.
+		wordBegin = std::find_if_not(wordBegin, end, isWhitespace<typename It::value_type>);
+		const It wordEnd = std::find_if(wordBegin, end, isWhitespace<typename It::value_type>);
+
+		return { wordBegin, wordEnd };
 	}
 
 	std::string quote(const char* const str);

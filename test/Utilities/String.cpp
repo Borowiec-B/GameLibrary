@@ -64,3 +64,31 @@ TEST_CASE("isWhitespace() works for char and wchar_t.", "[string][utilities]")
 	REQUIRE(std::all_of(std::begin(wideOnlyWhitespace), std::end(wideOnlyWhitespace), isWhitespace<wchar_t>));
 }
 
+TEST_CASE("getNextWord() returns Iterator pair delimiting next word. Works with std::string and std::wstring.", "[string][utilities]")
+{
+	const std::string words = "    firstWord\t  \nsecondWord  ";
+
+	const auto firstWordDelimiters = getNextWord(std::cbegin(words), std::cend(words));
+	const auto secondWordDelimiters = getNextWord(firstWordDelimiters.first, std::cend(words));
+
+	const std::string firstWord(firstWordDelimiters.first, firstWordDelimiters.second);
+	const std::string secondWord(secondWordDelimiters.first, secondWordDelimiters.second);
+
+	REQUIRE(firstWord == "firstWord");
+	REQUIRE(secondWord == "secondWord");
+	// When there are no more words, getNextWords returns { end, end };
+	REQUIRE(getNextWord(secondWordDelimiters.first, std::cend(words)).first == std::cend(words));
+
+
+	const std::wstring wideWords = L"firstWord\t  \nsecondWord";
+
+	// If getNextWord()'s begin argument already points at a word, it'll skip it and find the next one.
+	// So, getNextWord() starting from wideWords's begin must give us secondWord.
+	const auto wideSecondWordDelimiters = getNextWord(std::cbegin(wideWords), std::cend(wideWords));
+
+	const std::wstring wideSecondWord(wideSecondWordDelimiters.first, wideSecondWordDelimiters.second);
+	
+	REQUIRE(wideSecondWord == L"secondWord");
+	REQUIRE(getNextWord(wideSecondWordDelimiters.first, std::cend(wideWords)).first == std::cend(wideWords));
+}
+
