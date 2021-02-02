@@ -76,3 +76,4 @@ namespace GameLibrary::Utilities
 	std::string quote(const char* const str);
 	std::wstring quote(const wchar_t* const str);
 }
+
