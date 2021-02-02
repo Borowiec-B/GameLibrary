@@ -58,17 +58,18 @@ namespace GameLibrary::Utilities
 	 *  			   Second iterator points to one position past word's last character.
 	 */
 	template<typename It>
-	std::pair<It, It> getNextWord(const It begin, const It end, std::function<bool(typename It::value_type)> predicate = isWhitespace<typename It::value_type>) {
+	std::pair<It, It> getNextWord(const It begin, const It end,
+								  std::function<bool(typename It::value_type)> delimiterPredicate = isWhitespace<typename It::value_type>) {
 		It wordBegin = begin;
 
 		// If begin already points at a word (not delimiter), skip to the end of that word.
-		if (!predicate(*wordBegin))
-			wordBegin = std::find_if(wordBegin, end, predicate);
+		if (!delimiterPredicate(*wordBegin))
+			wordBegin = std::find_if(wordBegin, end, delimiterPredicate);
 
 		// wordBegin must be pointing at delimiter or end at this point.
 		// Move it to next non-delimiter character, and wordEnd to next delimiter.
-		wordBegin = std::find_if_not(wordBegin, end, predicate);
-		const It wordEnd = std::find_if(wordBegin, end, predicate);
+		wordBegin = std::find_if_not(wordBegin, end, delimiterPredicate);
+		const It wordEnd = std::find_if(wordBegin, end, delimiterPredicate);
 
 		return { wordBegin, wordEnd };
 	}
