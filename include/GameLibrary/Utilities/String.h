@@ -58,17 +58,17 @@ namespace GameLibrary::Utilities
 	 *  			   Second iterator points to one position past word's last character.
 	 */
 	template<typename It>
-	std::pair<It, It> getNextWord(const It begin, const It end) {
+	std::pair<It, It> getNextWord(const It begin, const It end, std::function<bool(typename It::value_type)> predicate = isWhitespace<typename It::value_type>) {
 		It wordBegin = begin;
 
 		// If begin already points at a word (not whitespace), skip to the end of that word.
 		if (!isWhitespace(*wordBegin))
-			wordBegin = std::find_if(wordBegin, end, isWhitespace<typename It::value_type>);
+			wordBegin = std::find_if(wordBegin, end, predicate);
 
 		// wordBegin must be pointing at whitespace or end at this point.
 		// Move it to next non-whitespace character, and wordEnd to next whitespace.
-		wordBegin = std::find_if_not(wordBegin, end, isWhitespace<typename It::value_type>);
-		const It wordEnd = std::find_if(wordBegin, end, isWhitespace<typename It::value_type>);
+		wordBegin = std::find_if_not(wordBegin, end, predicate);
+		const It wordEnd = std::find_if(wordBegin, end, predicate);
 
 		return { wordBegin, wordEnd };
 	}
