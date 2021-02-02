@@ -1,5 +1,6 @@
 #include "GameLibrary/Utilities/String.h"
 
+#include <algorithm>
 #include <string>
 
 #include "catch2/catch.hpp"
@@ -47,5 +48,19 @@ TEST_CASE("Quote() matches behavior of surround() with quotation mark argument."
 	REQUIRE(quote(L"str") == surround(L"str", L'"'));
 	REQUIRE(quote("") == surround("", '"'));
 	REQUIRE(quote(L"") == surround(L"", L'"'));
+}
+
+TEST_CASE("isWhitespace() works for char and wchar_t.", "[string][utilities]")
+{
+	const std::string noWhitespace = "123_abcd_\0";
+	const std::string onlyWhitespace = "\n\r\t\v   ";
+	const std::wstring wideNoWhitespace = L"123_abcd_\0";
+	const std::wstring wideOnlyWhitespace = L"\n\r\t\v   ";
+
+	REQUIRE(std::none_of(std::begin(noWhitespace), std::end(noWhitespace), isWhitespace<char>));
+	REQUIRE(std::all_of(std::begin(onlyWhitespace), std::end(onlyWhitespace), isWhitespace<char>));
+
+	REQUIRE(std::none_of(std::begin(wideNoWhitespace), std::end(wideNoWhitespace), isWhitespace<wchar_t>));
+	REQUIRE(std::all_of(std::begin(wideOnlyWhitespace), std::end(wideOnlyWhitespace), isWhitespace<wchar_t>));
 }
 

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cctype>
+#include <cwctype>
+
 #include "GameLibrary/Utilities/Conversions/String.h"
 #include "GameLibrary/Utilities/Conversions/StringToSstream.h"
 
@@ -37,6 +40,14 @@ namespace GameLibrary::Utilities
 	template<typename S>
 	S quote(const S& str) {
 		return surround(str, '"');
+	}
+
+	template<typename C>
+	bool isWhitespace(const C c) {
+		if constexpr (std::is_same_v<std::decay_t<C>, wchar_t>)
+			return std::iswspace(c);
+		else
+			return std::isspace(c);
 	}
 
 	std::string quote(const char* const str);
