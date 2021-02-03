@@ -98,6 +98,22 @@ namespace GameLibrary::Utilities
 		return { begin, std::find_if(begin, end, delimiterPredicate) };
 	}
 
+	template<typename It>
+	std::pair<It, It> getNthWord(const It begin, const It end, const std::size_t n,
+								 std::function<bool(typename It::value_type)> delimiterPredicate = isWhitespace<typename It::value_type>)
+	{
+		auto currentWord = getCurrentOrNextWord(begin, end, delimiterPredicate);
+		std::size_t currentWordIndex = 0;
+
+		while (currentWordIndex < n && currentWord.first != end)
+		{
+			currentWord = getNextWord(currentWord.first, end, delimiterPredicate);
+			++currentWordIndex;
+		}
+
+		return currentWord;
+	}
+
 	/*
 	 *  split(): Return chunks of string delimited by whitespace, or supplied predicate. Optionally returns only up to maxItems items.
 	 */
