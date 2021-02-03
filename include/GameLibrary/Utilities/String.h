@@ -74,6 +74,20 @@ namespace GameLibrary::Utilities
 		return { wordBegin, wordEnd };
 	}
 
+	template<typename It>
+	std::pair<It, It> getCurrentOrNextWord(const It begin, const It end,
+										   std::function<bool(typename It::value_type)> delimiterPredicate = isWhitespace<typename It::value_type>)
+	{
+		// If begin is already pointing at a word, getNextWord() will skip over it and find the next one.
+		// So only use it if begin is not pointing at one.
+		if (delimiterPredicate(*begin))
+			return getNextWord(begin, end, delimiterPredicate);
+		
+		// If execution is here, begin is pointing at a word.
+		// So just find the end of this word.
+		return { begin, std::find_if(begin, end, delimiterPredicate) };
+	}
+
 	std::string quote(const char* const str);
 	std::wstring quote(const wchar_t* const str);
 }

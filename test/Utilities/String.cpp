@@ -92,3 +92,19 @@ TEST_CASE("getNextWord() returns Iterator pair delimiting next word. Works with 
 	REQUIRE(getNextWord(wideSecondWordDelimiters.first, std::cend(wideWords)).first == std::cend(wideWords));
 }
 
+TEST_CASE("getCurrentOrNextWord() returns Iterator pair delimiting next word if *begin is delimiter, or otherwise current word.", "[string][utilities]")
+{
+	const std::string words = "0123   789";
+	const auto twoThreeIt  = std::next(std::cbegin(words), 2);
+	const auto gapIt	   = std::next(std::cbegin(words), 5);
+
+	const auto twoThreeDelimiters = getCurrentOrNextWord(twoThreeIt, std::cend(words));
+	const auto secondWordDelimiters = getCurrentOrNextWord(gapIt, std::cend(words));
+
+	const std::string twoThree(twoThreeDelimiters.first, twoThreeDelimiters.second);
+	const std::string secondWord(secondWordDelimiters.first, secondWordDelimiters.second);
+
+	REQUIRE(twoThree == "23");
+	REQUIRE(secondWord == "789");
+}
+
