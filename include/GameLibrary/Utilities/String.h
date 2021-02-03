@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <cwctype>
+#include <optional>
 #include <utility>
 
 #include "GameLibrary/Utilities/Conversions/String.h"
@@ -86,6 +87,31 @@ namespace GameLibrary::Utilities
 		// If execution is here, begin is pointing at a word.
 		// So just find the end of this word.
 		return { begin, std::find_if(begin, end, delimiterPredicate) };
+	}
+
+	template<template<typename, typename...> typename Container = std::vector, typename S>
+	Container<S> split(const S& str, std::function<bool(typename S::value_type)> delimiterPredicate = isWhitespace<typename S::value_type>,
+					   const std::optional<typename Container<S>::size_type> maxItems = std::nullopt)
+	{
+		Container<S> ret;
+
+		typename Container<S>::size_type itemsSoFar = 0;
+
+		auto itemsLimitReached = [ &itemsSoFar, maxItems ] {
+			return (maxItems.has_value() && itemsSoFar >= maxItems);
+		};
+
+		auto wordDelimiters = getCurrentOrNextWord(std::cbegin(str), std::cend(str), delimiterPredicate);
+		while (!itemsLimitReached() && wordDelimiters.first != std::cend(str))
+		{
+			ret.insert(std::end(ret), S(wordDelimiters.first, wordDelimiters.second));
+
+			wordDelimiters = getNextWord(wordDelimiters.first, std::cend(str), delimiterPredicate);
+
+			++itemsSoFar;
+		}
+
+		return ret;
 	}
 
 	std::string quote(const char* const str);
