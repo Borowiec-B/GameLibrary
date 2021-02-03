@@ -53,6 +53,15 @@ namespace GameLibrary::Utilities
 	}
 
 	/*
+	 *  fromPair(): Helper function returning T(pair.first, pair.second).
+	 *				Written because constructing strings from Iterator pairs is clunky.
+	 */
+	template<typename T, typename PT1, typename PT2>
+	T fromPair(std::pair<PT1, PT2> pair) {
+		return T(std::move(pair.first), std::move(pair.second));
+	}
+
+	/*
 	 *  getNextWord(): Return iterator pair delimiting next word in relation to begin.
 	 *
 	 *				   First iterator points to first character of word.
