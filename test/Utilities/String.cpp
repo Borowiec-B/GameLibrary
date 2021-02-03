@@ -108,7 +108,20 @@ TEST_CASE("getCurrentOrNextWord() returns Iterator pair delimiting next word if 
 	REQUIRE(secondWord == "789");
 }
 
-TEST_CASE("split() returns chunks of input string delimited by whitespace, or custom predicate. Optionally takes a limit of returned items.")
+TEST_CASE("getNthWord() returns Iterator pair delimiting nth word.", "[string][utilities]")
+{
+	const std::string words = "      firstWord    secondWord\t\n thirdWord\t";
+	
+	const auto firstWordDelimiters = getNthWord(std::cbegin(words), std::cend(words), 0);
+	const auto secondWordDelimiters = getNthWord(std::cbegin(words), std::cend(words), 1);
+	const auto invalidWordDelimiters = getNthWord(std::cbegin(words), std::cend(words), 10);
+
+	REQUIRE(fromPair<std::string>(firstWordDelimiters) == "firstWord");
+	REQUIRE(fromPair<std::string>(secondWordDelimiters) == "secondWord");
+	REQUIRE(invalidWordDelimiters.first == std::cend(words));
+}
+
+TEST_CASE("split() returns chunks of input string delimited by whitespace, or custom predicate. Optionally takes a limit of returned items.", "[string, utilities]")
 {
 	// Test the default, whitespace-based split.
 	const std::string words = " \t \nfirstWord\nsecondWord   \vthirdWord";

@@ -53,6 +53,15 @@ namespace GameLibrary::Utilities
 	}
 
 	/*
+	 *  fromPair(): Helper function returning T(pair.first, pair.second).
+	 *				Written because constructing strings from Iterator pairs is clunky.
+	 */
+	template<typename T, typename PT1, typename PT2>
+	T fromPair(std::pair<PT1, PT2> pair) {
+		return T(std::move(pair.first), std::move(pair.second));
+	}
+
+	/*
 	 *  getNextWord(): Return iterator pair delimiting next word in relation to begin.
 	 *
 	 *				   First iterator points to first character of word.
@@ -87,6 +96,22 @@ namespace GameLibrary::Utilities
 		// If execution is here, begin is pointing at a word.
 		// So just find the end of this word.
 		return { begin, std::find_if(begin, end, delimiterPredicate) };
+	}
+
+	template<typename It>
+	std::pair<It, It> getNthWord(const It begin, const It end, const std::size_t n,
+								 std::function<bool(typename It::value_type)> delimiterPredicate = isWhitespace<typename It::value_type>)
+	{
+		auto currentWord = getCurrentOrNextWord(begin, end, delimiterPredicate);
+		std::size_t currentWordIndex = 0;
+
+		while (currentWordIndex < n && currentWord.first != end)
+		{
+			currentWord = getNextWord(currentWord.first, end, delimiterPredicate);
+			++currentWordIndex;
+		}
+
+		return currentWord;
 	}
 
 	/*
