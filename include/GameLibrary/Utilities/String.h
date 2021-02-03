@@ -89,6 +89,9 @@ namespace GameLibrary::Utilities
 		return { begin, std::find_if(begin, end, delimiterPredicate) };
 	}
 
+	/*
+	 *  split(): Return chunks of string delimited by whitespace, or supplied predicate. Optionally returns only up to maxItems items.
+	 */
 	template<template<typename, typename...> typename Container = std::vector, typename S>
 	Container<S> split(const S& str, std::function<bool(typename S::value_type)> delimiterPredicate = isWhitespace<typename S::value_type>,
 					   const std::optional<typename Container<S>::size_type> maxItems = std::nullopt)
