@@ -9,7 +9,7 @@ set(test_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 append_prefixed_items_to_list("${test_source_dir}/" test_source_files main.cpp)
 append_prefixed_items_to_list("${test_source_dir}/Event/" test_source_files AnyCallback.cpp Callback.cpp Dispatcher.cpp Traits.cpp)
-append_prefixed_items_to_list("${test_source_dir}/Console/" test_source_files Console.cpp Cvar.cpp)
+append_prefixed_items_to_list("${test_source_dir}/Console/" test_source_files Command.cpp Console.cpp Cvar.cpp)
 append_prefixed_items_to_list("${test_source_dir}/Utilities/" test_source_files	IdManager.cpp Limits.cpp String.cpp Traits.cpp Conversions/String.cpp
 																				Conversions/Arithmetic.cpp Conversions/ArithmeticString.cpp)
 
