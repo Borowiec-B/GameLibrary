@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 
+#include "GameLibrary/Console/Command.h"
 #include "GameLibrary/Console/Cvar.h"
 #include "GameLibrary/Console/Events.h"
 #include "GameLibrary/Console/Types.h"
@@ -146,6 +147,19 @@ namespace GameLibrary::Console
 		void removeCvarListener(const Event::Dispatcher::Key key);
 
 		/*
+		 *  addCommandListener(): Add callback to be called each time Command is executed.
+		 *
+		 *  					  Multi-word names are accepted, but are unlikely to ever be called.
+		 *						  That's because input parsing is going to produce commands with name created from first word.
+		 */
+		template<typename F>
+		Event::Dispatcher::Key addCommandListener(String name, F&& callback) {
+			auto commandNameMatchesArgument = [ name(std::move(name)) ] ( const CommandSentEvent& e ) { return e.command.getName() == name; };
+
+			return _eventDispatcher.addCallback<CommandSentEvent>(std::forward<F>(callback), std::move(commandNameMatchesArgument));
+		}
+
+		/*
 		 *  addOwnedCvarListener(): Add callback to be called each time Cvar's setter is called, until object referenced by objectId is destroyed.
 		 *  						objectId must be an existing ConsoleObject.
 		 *
@@ -166,6 +180,7 @@ namespace GameLibrary::Console
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
 		 */
 		void removeObject(const Id id);
+		void dispatchCommand(Command cmd);
 
 	private:
 		std::map<String, Cvar>				_cvars;

@@ -23,3 +23,9 @@ void Console::removeObject(const Id id) {
 	_eventDispatcher.removeCallbacks(id);
 }
 
+void Console::dispatchCommand(Command cmd) {
+	const CommandSentEvent e{ {}, std::move(cmd) };
+
+	_eventDispatcher.dispatchEvent(e);
+}
+

@@ -1,5 +1,7 @@
 #include "GameLibrary/Console/Console.h"
 
+#include <string>
+
 #include "catch2/catch.hpp"
 
 #include "GameLibrary/Exceptions/Standard.h"
@@ -245,3 +247,26 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		REQUIRE(volumeLastValue == 0);
 	}
 }
+
+TEST_CASE("Console adds/removes Command listeners, and calls them when executing a Command.")
+{
+	Console c;
+	
+	// Two variables and commands just to ensure one dispatch doesn't call all callbacks, only those listening to sent name.
+	int handledCommandArgValue = 0;
+	int handledAnotherCommandArgValue = 0;
+
+	c.addCommandListener("set_the_variable", [ &handledCommandArgValue ] ( const CommandSentEvent& e ) {
+		handledCommandArgValue = std::stoi(e.command.getArgs()[0]);
+	});
+	c.addCommandListener("set_another_variable", [ &handledAnotherCommandArgValue ] ( const CommandSentEvent& e ) {
+		handledAnotherCommandArgValue = std::stoi(e.command.getArgs()[0]);
+	});
+
+	c.dispatchCommand(Command("set_the_variable 101 102 103"));
+	c.dispatchCommand(Command("set_another_variable 202"));
+
+	REQUIRE(handledCommandArgValue == 101);
+	REQUIRE(handledAnotherCommandArgValue == 202);
+}
+
