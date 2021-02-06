@@ -144,7 +144,7 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addCallback<CvarValueChangedEvent>(std::forward<F>(callback), std::move(cvarNameMatchesArgument));
 		}
 
-		void removeCvarListener(const Event::Dispatcher::Key key);
+		void removeListener(const Event::Dispatcher::Key key);
 
 		/*
 		 *  addCommandListener(): Add callback to be called each time Command is executed.

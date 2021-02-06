@@ -158,8 +158,8 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		volumeAfterChange = 0;
 		nameAfterChange = "";
 
-		c.removeCvarListener(key1);
-		c.removeCvarListener(key2);
+		c.removeListener(key1);
+		c.removeListener(key2);
 
 		c.setCvar("volume", 1);
 		c.setCvar("name", "AnotherName");

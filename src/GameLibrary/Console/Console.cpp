@@ -13,7 +13,7 @@ const Cvar& Console::getCvar(const String& name) {
 	}
 }
 
-void Console::removeCvarListener(const Event::Dispatcher::Key key) {
+void Console::removeListener(const Event::Dispatcher::Key key) {
 	_eventDispatcher.removeCallback(key);
 }
 
