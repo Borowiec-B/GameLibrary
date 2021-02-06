@@ -13,16 +13,20 @@ using namespace GameLibrary::Event;
  *    - Clean up this terrible file.
  */
 
-struct TestEvent : public BaseEvent {
-	bool* callIndicator = nullptr;
-};
-static const char*	valid1(TestEvent e) { *(e.callIndicator) = true; return "success"; }
-static float		valid2(const TestEvent& e) { *(e.callIndicator) = true; return 0; }
-static auto			valid3 = [ ] ( const TestEvent& e ) { *(e.callIndicator) = true; return true; };
+namespace
+{
+	struct TestEvent : public BaseEvent {
+		bool* callIndicator = nullptr;
+	};
 
-static bool			callIndicator = false;
-static void			valid4() { callIndicator = true; }
-static auto			valid5 = [ ] { callIndicator = true; };
+	const char*		valid1(TestEvent e) { *(e.callIndicator) = true; return "success"; }
+	float	   	 	valid2(const TestEvent& e) { *(e.callIndicator) = true; return 0; }
+	auto			valid3 = [ ] ( const TestEvent& e ) { *(e.callIndicator) = true; return true; };
+	
+	bool			callIndicator = false;
+	void			valid4() { callIndicator = true; }
+	auto			valid5 = [ ] { callIndicator = true; };
+}
 
 
 TEST_CASE("Callback stores a function taking no parameters or an event, and calls it.")
