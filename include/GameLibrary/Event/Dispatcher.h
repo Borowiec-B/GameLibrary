@@ -70,6 +70,8 @@ namespace GameLibrary::Event
 		/*
 		 *  removeCallback(): Remove callback referred to by key, and allow key to be returned by future addCallback().
 		 *					  Currently has no effect if key is not in use.
+		 *
+		 *					  NOTE: Don't use it to remove owned callbacks!!! It'll leave a dangling key. Use removeOwnedCallback().
 		 */
 		void removeCallback(const Key key);
 		void removeOwnedCallback(const Id owner, const Key key);
