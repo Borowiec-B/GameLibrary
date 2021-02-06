@@ -72,6 +72,7 @@ namespace GameLibrary::Event
 		 *					  Currently has no effect if key is not in use.
 		 */
 		void removeCallback(const Key key);
+		void removeOwnedCallback(const Id owner, const Key key);
 		void removeCallbacks(const Id owner);
 
 		/*
