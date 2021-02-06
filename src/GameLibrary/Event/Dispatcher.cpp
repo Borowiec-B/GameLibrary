@@ -12,7 +12,7 @@ void Dispatcher::removeCallback(const Key key) {
 
 void Dispatcher::removeCallbacks(const Id owner) {
 	// Ignore non-existent owners.
-	if (_ownershipMap.find(owner) == std::end(_ownershipMap))
+	if (_ownershipMap.find(owner) == std::cend(_ownershipMap))
 		return;
 
 	for (const auto key : _ownershipMap.at(owner))
