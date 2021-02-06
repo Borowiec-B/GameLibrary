@@ -59,6 +59,7 @@ TEST_CASE("Dispatcher removes free-standing and owned callbacks.", "[event]")
 
 	constexpr Dispatcher::Id twoCallbacksOwnerId = 1;
 	constexpr Dispatcher::Id fourCallbacksOwnerId = 2;
+	std::set<Dispatcher::Key> keysOfFourCallbacksOwner;
 
 	// Add 10 free-standing callCount's incrementers.
 	std::vector<Dispatcher::Key> keys;
@@ -69,20 +70,23 @@ TEST_CASE("Dispatcher removes free-standing and owned callbacks.", "[event]")
 	for (int i = 0; i < 2; ++i)
 		d.addOwnedCallback<DummyEvent>(twoCallbacksOwnerId, [ &callCount ] { ++callCount; });
 	for (int i = 0; i < 4; ++i)
-		d.addOwnedCallback<DummyEvent>(fourCallbacksOwnerId, [ &callCount ] { ++callCount; });
+		keysOfFourCallbacksOwner.emplace(d.addOwnedCallback<DummyEvent>(fourCallbacksOwnerId, [ &callCount ] { ++callCount; }));
 
 	// Remove five free-standing incrementers, and two owned. (total 9 incrementers after this)
 	for (int i = 0; i < 5; ++i)
 		d.removeCallback(i);
 	d.removeCallbacks(twoCallbacksOwnerId);
 	
-	// Removing callbacks owned by id already having 0 does nothing right now.
-	d.removeCallbacks(twoCallbacksOwnerId);
-	d.removeCallbacks(twoCallbacksOwnerId);
+	// Removing callbacks owned by id already having 0 should do nothing right now.
+	REQUIRE_NOTHROW(d.removeCallbacks(twoCallbacksOwnerId));
+	REQUIRE_NOTHROW(d.removeCallbacks(twoCallbacksOwnerId));
 
+	// Remove one callback of fourCallbacksOwnerId. (total 8 incrementers after this)
+	d.removeOwnedCallback(fourCallbacksOwnerId, *std::cbegin(keysOfFourCallbacksOwner));
+
+	// From all previous code, 8 incrementers should be left.
 	d.dispatchEvent(DummyEvent{});
-
-	REQUIRE(callCount == 9);
+	REQUIRE(callCount == 8);
 }
 
 TEST_CASE("On dispatchEvent(), callbacks with registered predicates will get called only if predicate returns true.", "[event]")

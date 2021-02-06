@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <typeindex>
 
 #include "GameLibrary/Event/AnyCallback.h"
@@ -61,7 +62,7 @@ namespace GameLibrary::Event
 		Key addOwnedCallback(Id owner, Args&&... addCallbackArgs) {
 			const auto key = addCallback<E>(std::forward<Args>(addCallbackArgs)...);
 
-			_ownershipMap[owner].emplace_back(key);
+			_ownershipMap[owner].emplace(key);
 
 			return key;
 		}
@@ -69,8 +70,16 @@ namespace GameLibrary::Event
 		/*
 		 *  removeCallback(): Remove callback referred to by key, and allow key to be returned by future addCallback().
 		 *					  Currently has no effect if key is not in use.
+		 *
+		 *					  NOTE: Don't use it to remove owned callbacks!!! It'll leave a dangling key. Use removeOwnedCallback().
 		 */
 		void removeCallback(const Key key);
+
+		/*
+		 *  removeOwnedCallback(): Remove callback referred to by key, and destroy owner's connection with that key.
+		 *						   Currently has no effect is owner or key are not in use.
+		 */
+		void removeOwnedCallback(const Id owner, const Key key);
 		void removeCallbacks(const Id owner);
 
 		/*
@@ -91,7 +100,7 @@ namespace GameLibrary::Event
 			
 	private:
 		using KeyToCallbackMap = std::map<Key, AnyCallback>;
-		std::map<Id, std::vector<Key>> _ownershipMap;
+		std::map<Id, std::set<Key>> _ownershipMap;
 
 		std::map<std::type_index, KeyToCallbackMap> _callbacks;
 		Utilities::SequentialIdManager<Key>			_idMgr;
