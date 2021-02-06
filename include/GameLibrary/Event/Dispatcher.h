@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <typeindex>
 
 #include "GameLibrary/Event/AnyCallback.h"
@@ -61,7 +62,7 @@ namespace GameLibrary::Event
 		Key addOwnedCallback(Id owner, Args&&... addCallbackArgs) {
 			const auto key = addCallback<E>(std::forward<Args>(addCallbackArgs)...);
 
-			_ownershipMap[owner].emplace_back(key);
+			_ownershipMap[owner].emplace(key);
 
 			return key;
 		}
@@ -91,7 +92,7 @@ namespace GameLibrary::Event
 			
 	private:
 		using KeyToCallbackMap = std::map<Key, AnyCallback>;
-		std::map<Id, std::vector<Key>> _ownershipMap;
+		std::map<Id, std::set<Key>> _ownershipMap;
 
 		std::map<std::type_index, KeyToCallbackMap> _callbacks;
 		Utilities::SequentialIdManager<Key>			_idMgr;
