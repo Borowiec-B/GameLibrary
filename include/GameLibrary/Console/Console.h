@@ -185,6 +185,13 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addOwnedCallback<CvarValueChangedEvent>(objectId, std::forward<F>(callback), std::move(cvarNameMatchesArgument));
 		}
 
+		/*
+		 *  addOwnedCommandListener(): Add callback to be called each time Command is sent, until object referenced by objectId is destroyed.
+		 *							   objectId must be an existing ConsoleObject.
+		 *
+		 *  Throws:
+		 *    NotFoundError if Console is not holding a ConsoleObject referenced by objectId.
+		 */
 		template<typename F>
 		Event::Dispatcher::Key addOwnedCommandListener(const Id objectId, String cmdName, F&& callback) {
 			if (_objects.find(objectId) == std::cend(_objects))
