@@ -177,6 +177,16 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addOwnedCallback<CvarValueChangedEvent>(objectId, std::forward<F>(callback), std::move(cvarNameMatchesArgument));
 		}
 
+		template<typename F>
+		Event::Dispatcher::Key addOwnedCommandListener(const Id objectId, String cmdName, F&& callback) {
+			if (_objects.find(objectId) == std::cend(_objects))
+				throw Exceptions::NotFoundError(Utilities::compose("Console::addMemberCommandListener() failed: Non-existent object id: ", objectId, "."));
+
+			auto cmdNameMatchesArgument = [ cmdName(std::move(cmdName)) ] ( const CommandSentEvent& e ) { return e.command.getName() == cmdName; };
+
+			return _eventDispatcher.addOwnedCallback<CommandSentEvent>(objectId, std::forward<F>(callback), std::move(cmdNameMatchesArgument));
+		}
+
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
 		 */
