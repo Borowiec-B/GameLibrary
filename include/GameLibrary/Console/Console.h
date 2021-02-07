@@ -172,7 +172,7 @@ namespace GameLibrary::Console
 		 */
 		template<typename F>
 		Event::Dispatcher::Key addOwnedCvarListener(const Id objectId, String cvarName, F&& callback) {
-			if (_objects.find(objectId) == std::end(_objects))
+			if (_objects.find(objectId) == std::cend(_objects))
 				throw Exceptions::NotFoundError(Utilities::compose("Console::addMemberCvarListener() failed: Non-existent object id: ", objectId, "."));
 
 			auto cvarNameMatchesArgument = [ cvarName(std::move(cvarName)) ] ( const CvarValueChangedEvent& e ) { return e.cvar.getName() == cvarName; };
