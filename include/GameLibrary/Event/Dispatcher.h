@@ -77,7 +77,7 @@ namespace GameLibrary::Event
 
 		/*
 		 *  removeOwnedCallback(): Remove callback referred to by key, and destroy owner's connection with that key.
-		 *						   Currently has no effect is owner or key are not in use.
+		 *						   Currently has no effect if owner or key is not in use.
 		 */
 		void removeOwnedCallback(const Id owner, const Key key);
 		void removeCallbacks(const Id owner);
