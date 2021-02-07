@@ -130,6 +130,10 @@ namespace GameLibrary::Console
 			_eventDispatcher.dispatchEvent(CvarValueChangedEvent{{}, target});
 		}
 
+		bool cvarExists(const String& name) {
+			return _cvars.find(name) != std::cend(_cvars);
+		}
+
 		/*
 		 *  getCvar(): Return const reference to Cvar.
 		 *
