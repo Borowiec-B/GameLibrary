@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 #include <map>
 #include <memory>
 
@@ -205,6 +206,10 @@ namespace GameLibrary::Console
 		GameLibrary::Event::Dispatcher		_eventDispatcher;
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
 		std::map<Id, ObjectPtr>				_objects;
+
+		std::istream&						_in  = std::cin;
+		std::ostream&						_out = std::cout;
+		std::ostream&						_err = std::cerr;
 	};
 
 	template<typename T, typename R, typename... Params>
