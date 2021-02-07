@@ -256,7 +256,7 @@ TEST_CASE("Console adds/removes Command listeners, and calls them when executing
 	int handledCommandArgValue = 0;
 	int handledAnotherCommandArgValue = 0;
 
-	c.addCommandListener("set_the_variable", [ &handledCommandArgValue ] ( const CommandSentEvent& e ) {
+	const auto listenerKey = c.addCommandListener("set_the_variable", [ &handledCommandArgValue ] ( const CommandSentEvent& e ) {
 		handledCommandArgValue = std::stoi(e.command.getArgs()[0]);
 	});
 	c.addCommandListener("set_another_variable", [ &handledAnotherCommandArgValue ] ( const CommandSentEvent& e ) {
@@ -267,6 +267,19 @@ TEST_CASE("Console adds/removes Command listeners, and calls them when executing
 	c.dispatchCommand(Command("set_another_variable 202"));
 
 	REQUIRE(handledCommandArgValue == 101);
+	REQUIRE(handledAnotherCommandArgValue == 202);
+
+	// Remove listener writing to handledCommandArgValue, make sure it stops getting called.
+	// And make sure listener writing to handledAnotherCommandArgValue is unaffected.
+	c.removeListener(listenerKey);
+
+	handledCommandArgValue = 0;
+	handledAnotherCommandArgValue = 0;
+
+	c.dispatchCommand(Command("set_the_variable 101"));
+	c.dispatchCommand(Command("set_another_variable 202"));
+
+	REQUIRE(handledCommandArgValue == 0);
 	REQUIRE(handledAnotherCommandArgValue == 202);
 }
 
