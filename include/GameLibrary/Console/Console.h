@@ -9,6 +9,7 @@
 #include "GameLibrary/Console/Events.h"
 #include "GameLibrary/Console/Types.h"
 #include "GameLibrary/Event/Dispatcher.h"
+#include "GameLibrary/Utilities/Functions.h"
 #include "GameLibrary/Utilities/IdManager.h"
 #include "GameLibrary/Utilities/String.h"
 
@@ -195,17 +196,7 @@ namespace GameLibrary::Console
 
 		static_assert(paramsCount == 0 || paramsCount == 1, "ConsoleObject::addMemberCvarListener() failed: Cvar listener must take 0 or 1 (event) argument.");
 
-		// Cvar listeners take either an event, or 0 arguments - use count of parameters to determine if placeholders::_1 should be placed.
-		if constexpr (paramsCount == 0)
-		{
-			std::function<R()> boundFunction = std::bind(std::move(method), static_cast<T*>(this));
-			return _console.addOwnedCvarListener(_id, std::move(cvarName), std::move(boundFunction));
-		}
-		else if (paramsCount == 1)
-		{
-			auto boundFunction = std::bind(std::move(method), static_cast<T*>(this), std::placeholders::_1);
-			return _console.addOwnedCvarListener(_id, std::move(cvarName), std::move(boundFunction));
-		}
+		return _console.addOwnedCvarListener(_id, std::move(cvarName), Utilities::bindMemberFunction(static_cast<T*>(this), method));
 	}
 }
 
