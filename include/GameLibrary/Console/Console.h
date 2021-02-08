@@ -240,6 +240,9 @@ namespace GameLibrary::Console
 		void removeObject(const Id id);
 		void dispatchCommand(Command cmd);
 
+		/*
+		 *  parse(): Parse input, and do one of following: set Cvar, print Cvar, try to call command, do nothing.
+		 */
 		void parse(const String& input);
 
 	private:
