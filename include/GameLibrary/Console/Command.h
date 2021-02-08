@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 #include "GameLibrary/Console/Types.h"
@@ -7,6 +8,14 @@
 
 namespace GameLibrary::Console
 {
+	struct CommandInfo {
+		CommandInfo(String name, std::size_t paramsCount, String description = "");
+
+		String name;
+		std::size_t paramsCount;
+		String description;
+	};
+
 	class Command
 	{
 	public:

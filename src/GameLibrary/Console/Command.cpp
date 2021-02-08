@@ -5,6 +5,8 @@
 
 namespace GameLibrary::Console
 {
+	CommandInfo::CommandInfo(String name, std::size_t paramsCount, String description) : name(name), paramsCount(paramsCount), description(description) {}
+
 	Command::Command(const String& stringToParse) {
 		const auto nameDelimiters = Utilities::getNthWord(std::cbegin(stringToParse), std::cend(stringToParse), 0, Utilities::isWhitespace<String::value_type>);
 		if (nameDelimiters.first == std::cend(stringToParse))
