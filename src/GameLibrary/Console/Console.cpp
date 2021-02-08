@@ -9,6 +9,10 @@ bool Console::cvarExists(const String& name) const {
 	return _cvars.find(name) != std::cend(_cvars);
 }
 
+bool Console::commandInfoExists(const String& name) const {
+	return _commandInfos.find(name) != std::cend(_commandInfos);
+}
+
 const Cvar& Console::getCvar(const String& name) {
 	try {
 		return _cvars.at(name);
