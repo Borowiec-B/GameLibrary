@@ -200,6 +200,13 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addOwnedCallback<CommandSentEvent>(objectId, std::forward<F>(callback), std::move(cmdNameMatchesArgument));
 		}
 
+		/*
+		 *  printCvar(): Print a message containing Cvar's value to Console's out stream.
+		 *
+		 *				 Format of output, depending on existence of Cvar:
+		 *				   - Cvar: "cvar_name" Value: "cvar_value"\n
+		 *				   - Cvar: "cvar_name" doesn't exist.\n
+		 */
 		void printCvar(const String& name) const;
 
 		/*
