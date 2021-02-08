@@ -21,6 +21,10 @@ namespace GameLibrary::Console
 		String description;
 	};
 
+	/*
+	 *  To do:
+	 *    - Maybe remove parsing constructor, because parsing is a currently a job done by Console.
+	 */
 	class Command
 	{
 	public:
