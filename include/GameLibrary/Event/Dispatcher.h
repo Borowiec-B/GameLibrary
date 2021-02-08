@@ -88,6 +88,10 @@ namespace GameLibrary::Event
 		 *						   Currently has no effect if owner or key is not in use.
 		 */
 		void removeOwnedCallback(const Id owner, const Key key);
+
+		/*
+		 *  removeCallbacks(): Remove all callbacks owned by owner, and clear owner's ownership list (list of used keys owned by id).
+		 */
 		void removeCallbacks(const Id owner);
 
 		/*
