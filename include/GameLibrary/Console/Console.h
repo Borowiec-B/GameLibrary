@@ -18,7 +18,7 @@
 namespace GameLibrary::Console
 {
 	using CvarCollection = std::vector<Cvar>;
-	using CommandInfoCollection = std::map<String, CommandInfo>;
+	using CommandInfoCollection = std::vector<CommandInfo>;
 	using Id = int;
 
 	/*
@@ -120,7 +120,8 @@ namespace GameLibrary::Console
 		 */
 		template<typename T>
 		void initCommandInfos() {
-			_commandInfos.merge(T::getCommandInfos());
+			for (auto&& cmdInfo : T::getCommandInfos())
+				_commandInfos.try_emplace(cmdInfo.name, std::move(cmdInfo));
 		}
 
 		template<typename T1, typename T2, typename... Ts>
@@ -243,7 +244,7 @@ namespace GameLibrary::Console
 
 	private:
 		std::map<String, Cvar>				_cvars;
-		CommandInfoCollection				_commandInfos;
+		std::map<String, CommandInfo>		_commandInfos;
 
 		GameLibrary::Event::Dispatcher		_eventDispatcher;
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
