@@ -21,8 +21,8 @@ namespace GameLibrary::Event
 	class Dispatcher
 	{
 	public:
-		using Id = int;
-		using Key = int;
+		using Id = long long;
+		using Key = long long;
 
 		/*
 		 *  addCallback(): Add supplied function to list of callbacks called when dispatching event of type E.
