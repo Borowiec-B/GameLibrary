@@ -18,6 +18,7 @@
 namespace GameLibrary::Console
 {
 	using CvarCollection = std::map<String, Cvar>;
+	using CommandInfoCollection = std::map<String, CommandInfo>;
 	using Id = int;
 
 	/*
@@ -110,6 +111,17 @@ namespace GameLibrary::Console
 		void initCvars() {
 			initCvars<T1>();
 			initCvars<T2, Ts...>();
+		}
+
+		template<typename T>
+		void initCommandInfos() {
+			_commandInfos.merge(T::getCommandInfos());
+		}
+
+		template<typename T1, typename T2, typename... Ts>
+		void initCommandInfos() {
+			initCommandInfos<T1>();
+			initCommandInfos<T2, Ts...>();
 		}
 
 		/*
@@ -224,6 +236,8 @@ namespace GameLibrary::Console
 
 	private:
 		CvarCollection						_cvars;
+		CommandInfoCollection				_commandInfos;
+
 		GameLibrary::Event::Dispatcher		_eventDispatcher;
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
 		std::map<Id, ObjectPtr>				_objects;
