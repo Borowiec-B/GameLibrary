@@ -59,8 +59,8 @@ TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on in
 		static CvarCollection getCvars() {
 			CvarCollection ret;
 
-			ret.try_emplace("sv_cheats", "sv_cheats", Cvar::ValueType::Integer, 0);
-			ret.try_emplace("volume", "volume", Cvar::ValueType::Float, 1.5);
+			ret.emplace_back("sv_cheats", Cvar::ValueType::Integer, 0);
+			ret.emplace_back("volume", Cvar::ValueType::Float, 1.5);
 
 			return ret;
 		};
@@ -70,8 +70,8 @@ TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on in
 		static CvarCollection getCvars() {
 			CvarCollection ret;
 
-			ret.try_emplace("name", "name", Cvar::ValueType::String, "default_name");
-			ret.try_emplace("group", "group", Cvar::ValueType::String, "default_group");
+			ret.emplace_back("name", Cvar::ValueType::String, "default_name");
+			ret.emplace_back("group", Cvar::ValueType::String, "default_group");
 
 			return ret;
 		}
@@ -95,9 +95,9 @@ TEST_CASE("Console sets Cvar values using setCvar() or parse().")
 		static CvarCollection getCvars() {
 			CvarCollection ret;
 
-			ret.try_emplace("sv_cheats", "sv_cheats", Cvar::ValueType::Integer);
-			ret.try_emplace("volume", "volume", Cvar::ValueType::Float);
-			ret.try_emplace("name", "name", Cvar::ValueType::String);
+			ret.emplace_back("sv_cheats", Cvar::ValueType::Integer);
+			ret.emplace_back("volume", Cvar::ValueType::Float);
+			ret.emplace_back("name", Cvar::ValueType::String);
 
 			return ret;
 		}
@@ -131,8 +131,8 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		static CvarCollection getCvars() {
 			CvarCollection ret;
 
-			ret.try_emplace("volume", "volume", Cvar::ValueType::Float, 0);
-			ret.try_emplace("name", "name", Cvar::ValueType::String, "");
+			ret.emplace_back("volume", Cvar::ValueType::Float, 0);
+			ret.emplace_back("name", Cvar::ValueType::String, "");
 
 			return ret;
 		};

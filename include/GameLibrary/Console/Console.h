@@ -17,7 +17,7 @@
 
 namespace GameLibrary::Console
 {
-	using CvarCollection = std::map<String, Cvar>;
+	using CvarCollection = std::vector<Cvar>;
 	using CommandInfoCollection = std::map<String, CommandInfo>;
 	using Id = int;
 
@@ -104,7 +104,8 @@ namespace GameLibrary::Console
 		 */
 		template<typename T>
 		void initCvars() {
-			_cvars.merge(T::getCvars());
+			for (auto&& cvar : T::getCvars())
+				_cvars.try_emplace(cvar.getName(), std::move(cvar));
 		}
 
 		template<typename T1, typename T2, typename... Ts>
@@ -241,7 +242,7 @@ namespace GameLibrary::Console
 		void parse(const String& input);
 
 	private:
-		CvarCollection						_cvars;
+		std::map<String, Cvar>				_cvars;
 		CommandInfoCollection				_commandInfos;
 
 		GameLibrary::Event::Dispatcher		_eventDispatcher;
