@@ -25,6 +25,7 @@ namespace GameLibrary::Console
 	{
 	public:
 		Command(const String& stringToParse);
+		Command(String name, std::vector<String> args);
 
 		const String& getName() const;
 		const std::vector<String>& getArgs() const;

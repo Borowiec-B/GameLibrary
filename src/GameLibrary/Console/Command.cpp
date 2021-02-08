@@ -19,6 +19,8 @@ namespace GameLibrary::Console
 		_args = Utilities::split<std::vector>(String(nameDelimiters.second, std::cend(stringToParse)), Utilities::isWhitespace<String::value_type>, maxArgs);
 	}
 
+	Command::Command(String name, std::vector<String> args) : _name(std::move(name)), _args(std::move(args)) {}
+
 	const String& Command::getName() const {
 		return _name;
 	}
