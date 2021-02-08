@@ -5,6 +5,10 @@ using namespace GameLibrary::Console;
 
 ConsoleObject::ConsoleObject(Console& console, Id id) : _console(console), _id(id) {}
 
+bool Console::cvarExists(const String& name) const {
+	return _cvars.find(name) != std::cend(_cvars);
+}
+
 const Cvar& Console::getCvar(const String& name) {
 	try {
 		return _cvars.at(name);
