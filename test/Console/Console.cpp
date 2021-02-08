@@ -255,9 +255,22 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 	}
 }
 
-TEST_CASE("Console adds/removes Command listeners, and calls them when executing a Command.")
+TEST_CASE("Console adds/removes Command listeners, and calls them when executing a registered Command with correct amount of arguments.")
 {
 	Console c;
+
+	struct CommandHolder {
+		static CommandInfoCollection getCommandInfos() {
+			CommandInfoCollection ret;
+
+			ret.emplace_back("set_the_variable", 1, "Sets variable handledCommandArgValue to argument.");
+			ret.emplace_back("set_another_variable", 1, "Sets variable handledAnotherCommandArgValue to argument.");
+
+			return ret;
+		}
+	};
+
+	c.initCommandInfos<CommandHolder>();
 	
 	// Two variables and commands just to ensure one dispatch doesn't call all callbacks, only those listening to sent name.
 	int handledCommandArgValue = 0;
@@ -270,7 +283,9 @@ TEST_CASE("Console adds/removes Command listeners, and calls them when executing
 		handledAnotherCommandArgValue = std::stoi(e.command.getArgs()[0]);
 	});
 
-	c.dispatchCommand(Command("set_the_variable 101 102 103"));
+	c.dispatchCommand(Command("set_the_variable 101"));
+	// This command will be ignored, because set_the_variable takes 1 argument - not 3.
+	c.dispatchCommand(Command("set_the_variable 999 102 103"));
 	c.dispatchCommand(Command("set_another_variable 202"));
 
 	REQUIRE(handledCommandArgValue == 101);

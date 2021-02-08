@@ -36,9 +36,12 @@ void Console::removeObject(const Id id) {
 }
 
 void Console::dispatchCommand(Command cmd) {
-	const CommandSentEvent e{ {}, std::move(cmd) };
+	if (commandMatchesRequirements(cmd))
+	{
+		const CommandSentEvent e{ {}, std::move(cmd) };
 
-	_eventDispatcher.dispatchEvent(e);
+		_eventDispatcher.dispatchEvent(e);
+	}
 }
 
 void Console::printCvar(const String& name) const {
