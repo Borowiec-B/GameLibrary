@@ -264,7 +264,7 @@ TEST_CASE("Console adds/removes Command listeners, and calls them when executing
 			CommandInfoCollection ret;
 
 			ret.emplace_back("set_the_variable", 1, "Sets variable handledCommandArgValue to argument.");
-			ret.emplace_back("set_another_variable", 1, "Sets variable handledAnotherCommandArgValue to argument.");
+			ret.emplace_back("set_another_variable_to_sum", 2, "Sets variable handledAnotherCommandArgValue to argument.");
 
 			return ret;
 		}
@@ -279,17 +279,19 @@ TEST_CASE("Console adds/removes Command listeners, and calls them when executing
 	const auto listenerKey = c.addCommandListener("set_the_variable", [ &handledCommandArgValue ] ( const CommandSentEvent& e ) {
 		handledCommandArgValue = std::stoi(e.command.getArgs()[0]);
 	});
-	c.addCommandListener("set_another_variable", [ &handledAnotherCommandArgValue ] ( const CommandSentEvent& e ) {
-		handledAnotherCommandArgValue = std::stoi(e.command.getArgs()[0]);
+	c.addCommandListener("set_another_variable_to_sum", [ &handledAnotherCommandArgValue ] ( const CommandSentEvent& e ) {
+		handledAnotherCommandArgValue = std::stoi(e.command.getArgs()[0]) + std::stoi(e.command.getArgs()[1]);
 	});
 
 	c.dispatchCommand(Command("set_the_variable 101"));
-	// This command will be ignored, because set_the_variable takes 1 argument - not 3.
-	c.dispatchCommand(Command("set_the_variable 999 102 103"));
-	c.dispatchCommand(Command("set_another_variable 202"));
+	c.parse("set_another_variable_to_sum 202 101");
+
+	// These commands will be ignored due to invalid amount of arguments.
+	c.dispatchCommand(Command("set_the_variable 105 102 103"));
+	c.parse("set_another_variable_to_sum 100 200 300");
 
 	REQUIRE(handledCommandArgValue == 101);
-	REQUIRE(handledAnotherCommandArgValue == 202);
+	REQUIRE(handledAnotherCommandArgValue == 303);
 
 	// Remove listener writing to handledCommandArgValue, make sure it stops getting called.
 	// And make sure listener writing to handledAnotherCommandArgValue is unaffected.
@@ -299,7 +301,7 @@ TEST_CASE("Console adds/removes Command listeners, and calls them when executing
 	handledAnotherCommandArgValue = 0;
 
 	c.dispatchCommand(Command("set_the_variable 101"));
-	c.dispatchCommand(Command("set_another_variable 202"));
+	c.parse("set_another_variable_to_sum 101 101");
 
 	REQUIRE(handledCommandArgValue == 0);
 	REQUIRE(handledAnotherCommandArgValue == 202);

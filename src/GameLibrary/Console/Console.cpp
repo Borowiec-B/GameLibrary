@@ -75,5 +75,18 @@ void Console::parse(const String& input) {
 			printCvar(firstToken);
 		}
 	}
+	else if (commandInfoExists(firstToken))
+	{
+		// Arbitrary limit.
+		constexpr auto maxArgs = 256;
+		auto args = Utilities::split<String, std::vector>(secondTokenDelimiters.first, std::cend(input), Utilities::isWhitespace<String::value_type>, maxArgs);
+		Command cmd(firstToken, std::move(args));
+
+		dispatchCommand(std::move(cmd));
+	}
+	else
+	{
+		_out << "Unrecognized command: \"" << firstToken << "\"\n";
+	}
 }
 
