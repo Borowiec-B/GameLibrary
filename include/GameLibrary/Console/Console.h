@@ -223,7 +223,7 @@ namespace GameLibrary::Console
 		void parse(const String& input);
 
 	private:
-		std::map<String, Cvar>				_cvars;
+		CvarCollection						_cvars;
 		GameLibrary::Event::Dispatcher		_eventDispatcher;
 		Utilities::SequentialIdManager<Id>	_idMgr{0, 1};
 		std::map<Id, ObjectPtr>				_objects;
