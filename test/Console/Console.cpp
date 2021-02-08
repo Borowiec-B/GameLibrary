@@ -89,7 +89,7 @@ TEST_CASE("Console initializes Cvars returned by T::getCvars(), and throws on in
 	REQUIRE_THROWS_AS(c.getCvar("invalid"), NotFoundError);
 }
 
-TEST_CASE("Console sets Cvar values.")
+TEST_CASE("Console sets Cvar values using setCvar() or parse().")
 {
 	struct CvarHolder {
 		static CvarCollection getCvars() {
@@ -107,15 +107,17 @@ TEST_CASE("Console sets Cvar values.")
 	c.initCvars<CvarHolder>();
 
 	c.setCvar("sv_cheats", 10);
-	c.setCvar("volume", 0.55);
-	c.setCvar("name", "Player");
+	c.parse("volume 0.55");
+	c.parse("  name   Player of game  ");
 
 	REQUIRE(c.getCvar("sv_cheats").getAs<int>() == 10);
 	REQUIRE(c.getCvar("volume").getAs<float>() == Approx(0.55));
-	REQUIRE(c.getCvar("name").getAsString() == "Player");
+	REQUIRE(c.getCvar("name").getAsString() == "Player of game  ");
 
-	// Console should handle setCvar() exceptions by itself soon, this is just to confirm it's not implemented yet.
-	REQUIRE_THROWS(c.setCvar("sv_cheats", "invalid"));
+	// Console should simply ignore invalid arguments given to setters, and leave the value unchanged.
+	REQUIRE_NOTHROW(c.setCvar("sv_cheats", "invalid"));
+	REQUIRE_NOTHROW(c.parse("sv_cheats invalid"));
+	REQUIRE(c.getCvar("sv_cheats").getAs<int>() == 10);
 
 	// Setting non-existent Cvars should do nothing at the moment.
 	REQUIRE_NOTHROW(c.setCvar("invalid", 100));

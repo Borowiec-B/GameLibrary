@@ -127,7 +127,12 @@ namespace GameLibrary::Console
 
 			Cvar& target = _cvars.at(name);
 
-			target.set(std::forward<T>(newValue));
+			try {
+				target.set(std::forward<T>(newValue));
+			} catch (const Exceptions::ConversionError&) {
+				return;
+			}
+
 			_eventDispatcher.dispatchEvent(CvarValueChangedEvent{{}, target});
 		}
 
@@ -214,6 +219,8 @@ namespace GameLibrary::Console
 		 */
 		void removeObject(const Id id);
 		void dispatchCommand(Command cmd);
+
+		void parse(const String& input);
 
 	private:
 		std::map<String, Cvar>				_cvars;

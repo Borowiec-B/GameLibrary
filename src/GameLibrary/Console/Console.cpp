@@ -42,3 +42,27 @@ void Console::printCvar(const String& name) const {
 		_out << "doesn't exist.\n";
 }
 
+void Console::parse(const String& input) {
+	const auto firstTokenDelimiters = Utilities::getNthWord(std::cbegin(input), std::cend(input), 0, Utilities::isWhitespace<String::value_type>);
+	if (firstTokenDelimiters.first == std::cend(input))
+		return;
+
+	const String firstToken = Utilities::fromPair<String>(firstTokenDelimiters);
+
+	if (cvarExists(firstToken))
+	{
+		const auto secondTokenDelimiters = Utilities::getNthWord(std::cbegin(input), std::cend(input), 1, Utilities::isWhitespace<String::value_type>);
+
+		// Check if there are more tokens than just one. If yes, set cvar to [secondToken.begin, inputEnd]. If not, print Cvar.
+		if (secondTokenDelimiters.first != std::cend(input))
+		{
+			const String secondTokenToEnd(secondTokenDelimiters.first, std::cend(input));
+			setCvar(firstToken, secondTokenToEnd);
+		}
+		else
+		{
+			printCvar(firstToken);
+		}
+	}
+}
+
