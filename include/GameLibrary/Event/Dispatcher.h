@@ -58,6 +58,14 @@ namespace GameLibrary::Event
 			return key;
 		}
 
+		/*
+		 *  addOwnedCallback(): Create a callback using addCallback(), and add resulting key to list of used keys owned by owner.
+		 *
+		 *						This ownership list is used in removeCallbacks() and removeOwnedCallback().
+		 *
+		 *  Throws:
+		 *    Refer to addCallback().
+		 */
 		template<typename E, typename... Args>
 		Key addOwnedCallback(Id owner, Args&&... addCallbackArgs) {
 			const auto key = addCallback<E>(std::forward<Args>(addCallbackArgs)...);
