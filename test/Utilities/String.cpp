@@ -121,7 +121,7 @@ TEST_CASE("getNthWord() returns Iterator pair delimiting nth word.", "[string][u
 	REQUIRE(invalidWordDelimiters.first == std::cend(words));
 }
 
-TEST_CASE("split() returns chunks of input string delimited by whitespace, or custom predicate. Optionally takes a limit of returned items.", "[string, utilities]")
+TEST_CASE("split() returns chunks of input string delimited by whitespace, or custom predicate. Optionally takes a limit of returned items.", "[string][utilities]")
 {
 	// Test the default, whitespace-based split.
 	const std::string words = " \t \nfirstWord\nsecondWord   \vthirdWord";
