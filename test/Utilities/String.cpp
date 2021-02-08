@@ -125,7 +125,7 @@ TEST_CASE("split() returns chunks of input string delimited by whitespace, or cu
 {
 	// Test the default, whitespace-based split.
 	const std::string words = " \t \nfirstWord\nsecondWord   \vthirdWord";
-	const auto splitWords = split<std::vector>(words);
+	const auto splitWords = split(std::cbegin(words), std::cend(words));
 
 	REQUIRE(splitWords.size() == 3);
 	REQUIRE((splitWords[0] == "firstWord" && splitWords[1] == "secondWord" && splitWords[2] == "thirdWord"));
@@ -134,16 +134,16 @@ TEST_CASE("split() returns chunks of input string delimited by whitespace, or cu
 	const std::wstring wideCommands = L"first Line \t\n  second Line;third Line";
 	auto commandDelimiterPredicate = [ ] ( wchar_t c ) { return (c == L'\n' || c == L';'); };
 
-	const auto splitWideCommands = split<std::vector, std::wstring>(wideCommands, commandDelimiterPredicate);
+	const auto splitWideCommands = split<std::wstring, std::vector>(std::cbegin(wideCommands), std::cend(wideCommands), commandDelimiterPredicate);
 	REQUIRE(splitWideCommands.size() == 3);
 	REQUIRE((splitWideCommands[0] == L"first Line \t" && splitWideCommands[1] == L"  second Line" && splitWideCommands[2] == L"third Line"));
 
 	// Test constraints on count of returned items.
-	const auto twoSplitWideCommands = split<std::vector, std::wstring>(wideCommands, commandDelimiterPredicate, 2);
+	const auto twoSplitWideCommands = split<std::wstring, std::vector>(std::cbegin(wideCommands), std::cend(wideCommands), commandDelimiterPredicate, 2);
 	REQUIRE(twoSplitWideCommands.size() == 2);
 	REQUIRE((splitWideCommands[0] == L"first Line \t" && splitWideCommands[1] == L"  second Line"));
 
-	const auto zeroSplitWideCommands = split<std::vector, std::wstring>(wideCommands, commandDelimiterPredicate, 0);
+	const auto zeroSplitWideCommands = split<std::wstring, std::vector>(std::cbegin(wideCommands), std::cend(wideCommands), commandDelimiterPredicate, 0);
 	REQUIRE(zeroSplitWideCommands.empty());
 }
 

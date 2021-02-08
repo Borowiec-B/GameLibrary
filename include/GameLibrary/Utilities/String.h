@@ -117,8 +117,8 @@ namespace GameLibrary::Utilities
 	/*
 	 *  split(): Return chunks of string delimited by whitespace, or supplied predicate. Optionally returns only up to maxItems items.
 	 */
-	template<template<typename, typename...> typename Container = std::vector, typename S>
-	Container<S> split(const S& str, std::function<bool(typename S::value_type)> delimiterPredicate = isWhitespace<typename S::value_type>,
+	template<typename S = std::string, template<typename, typename...> typename Container = std::vector, typename It>
+	Container<S> split(const It begin, const It end, std::function<bool(typename S::value_type)> delimiterPredicate = isWhitespace<typename S::value_type>,
 					   const std::optional<typename Container<S>::size_type> maxItems = std::nullopt)
 	{
 		Container<S> ret;
@@ -129,12 +129,12 @@ namespace GameLibrary::Utilities
 			return (maxItems.has_value() && itemsSoFar >= maxItems);
 		};
 
-		auto wordDelimiters = getCurrentOrNextWord(std::cbegin(str), std::cend(str), delimiterPredicate);
-		while (!itemsLimitReached() && wordDelimiters.first != std::cend(str))
+		auto wordDelimiters = getCurrentOrNextWord(begin, end, delimiterPredicate);
+		while (!itemsLimitReached() && wordDelimiters.first != end)
 		{
 			ret.insert(std::end(ret), S(wordDelimiters.first, wordDelimiters.second));
 
-			wordDelimiters = getNextWord(wordDelimiters.first, std::cend(str), delimiterPredicate);
+			wordDelimiters = getNextWord(wordDelimiters.first, end, delimiterPredicate);
 
 			++itemsSoFar;
 		}

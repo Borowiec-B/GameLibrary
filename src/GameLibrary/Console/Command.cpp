@@ -16,7 +16,7 @@ namespace GameLibrary::Console
 
 		// Arbitrary limit.
 		const std::size_t maxArgs = 1000;
-		_args = Utilities::split<std::vector>(String(nameDelimiters.second, std::cend(stringToParse)), Utilities::isWhitespace<String::value_type>, maxArgs);
+		_args = Utilities::split<String, std::vector>(nameDelimiters.second, std::cend(stringToParse), Utilities::isWhitespace<String::value_type>, maxArgs);
 	}
 
 	Command::Command(String name, std::vector<String> args) : _name(std::move(name)), _args(std::move(args)) {}

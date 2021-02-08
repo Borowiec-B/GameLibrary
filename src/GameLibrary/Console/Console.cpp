@@ -59,10 +59,10 @@ void Console::parse(const String& input) {
 		return;
 
 	const String firstToken = Utilities::fromPair<String>(firstTokenDelimiters);
+	const auto secondTokenDelimiters = Utilities::getNthWord(std::cbegin(input), std::cend(input), 1, Utilities::isWhitespace<String::value_type>);
 
 	if (cvarExists(firstToken))
 	{
-		const auto secondTokenDelimiters = Utilities::getNthWord(std::cbegin(input), std::cend(input), 1, Utilities::isWhitespace<String::value_type>);
 
 		// Check if there are more tokens than just one. If yes, set cvar to [secondToken.begin, inputEnd]. If not, print Cvar.
 		if (secondTokenDelimiters.first != std::cend(input))
