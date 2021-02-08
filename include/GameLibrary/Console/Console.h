@@ -113,6 +113,10 @@ namespace GameLibrary::Console
 			initCvars<T2, Ts...>();
 		}
 
+		/*
+		 *  initCommandInfos(): Add all CommandInfos returned by T::getCommandInfos() to list of CommandInfos.
+		 *						T::getCommandInfos() should return CommandInfoCollection.
+		 */
 		template<typename T>
 		void initCommandInfos() {
 			_commandInfos.merge(T::getCommandInfos());
