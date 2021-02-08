@@ -8,6 +8,11 @@
 
 namespace GameLibrary::Console
 {
+	/*
+	 *  CommandInfo: Struct describing Command's metadata and requirements.
+	 *
+	 *				 To be used by Console in a list storing all registered Commands.
+	 */
 	struct CommandInfo {
 		CommandInfo(String name, std::size_t paramsCount, String description = "");
 
