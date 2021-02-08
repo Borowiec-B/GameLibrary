@@ -156,7 +156,7 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		const auto key2 = c.addCvarListener("name", onNameChange);
 
 		c.setCvar("volume", 99.9);
-		c.setCvar("name", "Player");
+		c.parse("name Player");
 
 		REQUIRE(volumeAfterChange == Approx(99.9));
 		REQUIRE(nameAfterChange == "Player");
@@ -168,7 +168,7 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		c.removeListener(key1);
 		c.removeListener(key2);
 
-		c.setCvar("volume", 1);
+		c.parse("volume 1");
 		c.setCvar("name", "AnotherName");
 
 		REQUIRE(volumeAfterChange == 0);
@@ -199,7 +199,7 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		// After removeObject(), only one object with five incrementers should remain.
 		callCount = 0;
 		c.removeObject(objectWithTwoCallbacks);
-		c.setCvar("volume", 1.5);
+		c.parse("volume 1.5");
 		REQUIRE(callCount == 5);
 	}
 
@@ -237,7 +237,7 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		REQUIRE(globalValue == 10);
 
 		// VolumeListener sets volumeLastValue to Cvar's value on "volume" Cvar change.
-		c.setCvar("volume", 100);
+		c.parse("volume 100");
 		REQUIRE(volumeLastValue == Approx(100));
 
 
