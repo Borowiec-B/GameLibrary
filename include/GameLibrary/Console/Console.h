@@ -200,6 +200,8 @@ namespace GameLibrary::Console
 			return _eventDispatcher.addOwnedCallback<CommandSentEvent>(objectId, std::forward<F>(callback), std::move(cmdNameMatchesArgument));
 		}
 
+		void printCvar(const String& name) const;
+
 		/*
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
 		 */

@@ -33,3 +33,12 @@ void Console::dispatchCommand(Command cmd) {
 	_eventDispatcher.dispatchEvent(e);
 }
 
+void Console::printCvar(const String& name) const {
+	_out << "Cvar: \"" << name << "\" ";
+
+	if (cvarExists(name))
+		_out << "Value: \"" << _cvars.at(name).getAsString() << "\"\n";
+	else
+		_out << "doesn't exist.\n";
+}
+
