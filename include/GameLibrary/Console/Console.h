@@ -156,6 +156,15 @@ namespace GameLibrary::Console
 
 		bool cvarExists(const String& name) const;
 		bool commandInfoExists(const String& name) const;
+		
+		/*
+		 *  commandMatchesRequirements(): Check if cmd passes validity checks.
+		 *
+		 *								  Current validity checks:
+		 *								 	- Console stores a CommandInfo with cmd's name.
+		 *								 	- Stored CommandInfo's paramsCount is equal to count of arguments held by cmd.
+		 *
+		 */
 		bool commandMatchesRequirements(const Command& cmd) const;
 
 		/*
