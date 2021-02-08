@@ -238,6 +238,14 @@ namespace GameLibrary::Console
 		 *  removeObject(): If ConsoleObject referenced by id exists, destroy it and free its resources.
 		 */
 		void removeObject(const Id id);
+
+		/*
+		 *  dispatchCommand(): If contents of cmd are valid, call its listeners.
+		 *
+		 *					   Current validity checks:
+		 *						 - Console stores a CommandInfo with cmd's name.
+		 *						 - Stored CommandInfo's paramsCount is equal to count of arguments held by cmd.
+		 */
 		void dispatchCommand(Command cmd);
 
 		/*
