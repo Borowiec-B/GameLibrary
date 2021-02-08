@@ -154,6 +154,7 @@ namespace GameLibrary::Console
 
 		bool cvarExists(const String& name) const;
 		bool commandInfoExists(const String& name) const;
+		bool commandMatchesRequirements(const Command& cmd) const;
 
 		/*
 		 *  getCvar(): Return const reference to Cvar.

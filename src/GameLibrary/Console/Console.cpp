@@ -13,6 +13,10 @@ bool Console::commandInfoExists(const String& name) const {
 	return _commandInfos.find(name) != std::cend(_commandInfos);
 }
 
+bool Console::commandMatchesRequirements(const Command& cmd) const {
+	return (commandInfoExists(cmd.getName())) && (cmd.getArgs().size() == _commandInfos.at(cmd.getName()).paramsCount);
+}
+
 const Cvar& Console::getCvar(const String& name) {
 	try {
 		return _cvars.at(name);
