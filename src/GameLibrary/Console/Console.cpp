@@ -5,6 +5,10 @@ using namespace GameLibrary::Console;
 
 ConsoleObject::ConsoleObject(Console& console, Id id) : _console(console), _id(id) {}
 
+void ConsoleObject::removeListener(const Event::Dispatcher::Key key) {
+	_console.removeOwnedListener(_id, key);
+}
+
 bool Console::cvarExists(const String& name) const {
 	return _cvars.find(name) != std::cend(_cvars);
 }

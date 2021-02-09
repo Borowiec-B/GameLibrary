@@ -58,6 +58,8 @@ namespace GameLibrary::Console
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addMemberCommandListener(String cmdName, R(T::*method)(Params...));
 
+		void removeListener(const Event::Dispatcher::Key key);
+
 		/*
 		 *  onCreation(): Console-centric constructor, will be called almost immediately after constructor if object is created through Console.
 		 *
