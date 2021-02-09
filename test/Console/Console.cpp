@@ -13,6 +13,7 @@ using namespace GameLibrary::Console;
 /*
  *  Notes:
  *    - Some tests for registering / dispatching Commands are not written, because it works exactly like already tested Cvar dispatching.
+ *	  - Maybe rewrite this convoluted file.
  */
 
 
