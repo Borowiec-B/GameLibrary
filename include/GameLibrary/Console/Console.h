@@ -55,6 +55,9 @@ namespace GameLibrary::Console
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addMemberCvarListener(String cvarName, R(T::*method)(Params...));
 
+		/*
+		 *  addMemberCommandListener() Add member function to Console's list of callbacks called on successful Command dispatch.
+		 */
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addMemberCommandListener(String cmdName, R(T::*method)(Params...));
 
