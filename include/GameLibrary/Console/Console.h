@@ -49,21 +49,21 @@ namespace GameLibrary::Console
 	protected:
 		ConsoleObject(class Console& console, Id id);
 		
+		/*
+		 *  addCvarListener(): Add a function to Console's list of callbacks called on Cvar change.
+		 */
 		template<typename F>
 		Event::Dispatcher::Key addCvarListener(String cvarName, F&& func);
 
-		template<typename F>
-		Event::Dispatcher::Key addCommandListener(String cvarName, F&& func);
-
-		/*
-		 *  addCvarListener(): Add member function to Console's list of callbacks called on Cvar change.
-		 */
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addCvarListener(String cvarName, R(T::*method)(Params...));
 
 		/*
-		 *  addCommandListener() Add member function to Console's list of callbacks called on successful Command dispatch.
+		 *  addCommandListener() Add a function to Console's list of callbacks called on successful Command dispatch.
 		 */
+		template<typename F>
+		Event::Dispatcher::Key addCommandListener(String cvarName, F&& func);
+
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addCommandListener(String cmdName, R(T::*method)(Params...));
 
