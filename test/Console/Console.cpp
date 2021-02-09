@@ -1,6 +1,7 @@
 #include "GameLibrary/Console/Console.h"
 
 #include <string>
+#include <vector>
 
 #include "catch2/catch.hpp"
 
@@ -183,6 +184,7 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		
 		const auto objectWithTwoCallbacks = c.addObject<CallbackOwner>();
 		const auto objectWithFiveCallbacks = c.addObject<CallbackOwner>();
+		std::vector<GameLibrary::Event::Dispatcher::Key> keysOfFiveCallbacksOwner;
 
 		int callCount = 0;
 		auto incrementCallCount = [ &callCount ] { ++callCount; };
@@ -190,17 +192,18 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 		for (int i = 0; i < 2; ++i)
 			c.addOwnedCvarListener(objectWithTwoCallbacks, "volume", incrementCallCount);
 		for (int i = 0; i < 5; ++i)
-			c.addOwnedCvarListener(objectWithFiveCallbacks, "volume", incrementCallCount);
+			keysOfFiveCallbacksOwner.emplace_back(c.addOwnedCvarListener(objectWithFiveCallbacks, "volume", incrementCallCount));
 
 		// One object has 2 callback incrementing callCount, another object has 5.
 		c.setCvar("volume", 1);
 		REQUIRE(callCount == 7);
 
-		// After removeObject(), only one object with five incrementers should remain.
+		// After removeObject(), and removal of one owned listener, only one object with four incrementers should remain.
 		callCount = 0;
 		c.removeObject(objectWithTwoCallbacks);
+		c.removeOwnedListener(objectWithFiveCallbacks, keysOfFiveCallbacksOwner[0]);
 		c.parse("volume 1.5");
-		REQUIRE(callCount == 5);
+		REQUIRE(callCount == 4);
 	}
 
 	SECTION("Member functions")

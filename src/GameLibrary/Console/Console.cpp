@@ -32,6 +32,10 @@ void Console::removeListener(const Event::Dispatcher::Key key) {
 	_eventDispatcher.removeCallback(key);
 }
 
+void Console::removeOwnedListener(const Id objectId, const Event::Dispatcher::Key key) {
+	_eventDispatcher.removeOwnedCallback(objectId, key);
+}
+
 void Console::removeObject(const Id id) {
 	_idMgr.free(id);
 	_objects.erase(id);
