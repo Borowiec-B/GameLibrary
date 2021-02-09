@@ -61,6 +61,9 @@ namespace GameLibrary::Console
 		template<typename T, typename R, typename... Params>
 		Event::Dispatcher::Key addMemberCommandListener(String cmdName, R(T::*method)(Params...));
 
+		/*
+		 *  removeListener(): Remove any listener owned by this object.
+		 */
 		void removeListener(const Event::Dispatcher::Key key);
 
 		/*
