@@ -217,8 +217,8 @@ TEST_CASE("Console adds/removes Cvar listeners and calls them on Cvar setter cal
 			VolumeListener(Console& c, Id id, int value) : ConsoleObject(c, id), _value(value) { }
 
 			virtual void onCreation() override {
-				addMemberCvarListener("name", &VolumeListener::setGlobalValue);
-				addMemberCvarListener("volume", &VolumeListener::setVolumeValue);
+				addCvarListener("name", &VolumeListener::setGlobalValue);
+				addCvarListener("volume", &VolumeListener::setVolumeValue);
 			}
 
 			void setGlobalValue() {

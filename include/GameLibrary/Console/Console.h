@@ -56,16 +56,16 @@ namespace GameLibrary::Console
 		Event::Dispatcher::Key addCommandListener(String cvarName, F&& func);
 
 		/*
-		 *  addMemberCvarListner(): Add member function to Console's list of callbacks called on Cvar change.
+		 *  addCvarListner(): Add member function to Console's list of callbacks called on Cvar change.
 		 */
 		template<typename T, typename R, typename... Params>
-		Event::Dispatcher::Key addMemberCvarListener(String cvarName, R(T::*method)(Params...));
+		Event::Dispatcher::Key addCvarListener(String cvarName, R(T::*method)(Params...));
 
 		/*
-		 *  addMemberCommandListener() Add member function to Console's list of callbacks called on successful Command dispatch.
+		 *  addCommandListener() Add member function to Console's list of callbacks called on successful Command dispatch.
 		 */
 		template<typename T, typename R, typename... Params>
-		Event::Dispatcher::Key addMemberCommandListener(String cmdName, R(T::*method)(Params...));
+		Event::Dispatcher::Key addCommandListener(String cmdName, R(T::*method)(Params...));
 
 		/*
 		 *  removeListener(): Remove any listener owned by this object.
@@ -301,7 +301,7 @@ namespace GameLibrary::Console
 	}
 
 	template<typename T, typename R, typename... Params>
-	Event::Dispatcher::Key ConsoleObject::addMemberCvarListener(String cvarName, R(T::*method)(Params...)) {
+	Event::Dispatcher::Key ConsoleObject::addCvarListener(String cvarName, R(T::*method)(Params...)) {
 		constexpr auto paramsCount = sizeof...(Params);
 
 		static_assert(paramsCount == 0 || paramsCount == 1, "ConsoleObject::addMemberCvarListener() failed: Cvar listener must take 0 or 1 (event) argument.");
@@ -310,7 +310,7 @@ namespace GameLibrary::Console
 	}
 
 	template<typename T, typename R, typename... Params>
-	Event::Dispatcher::Key ConsoleObject::addMemberCommandListener(String cmdName, R(T::*method)(Params...)) {
+	Event::Dispatcher::Key ConsoleObject::addCommandListener(String cmdName, R(T::*method)(Params...)) {
 		constexpr auto paramsCount = sizeof...(Params);
 
 		static_assert(paramsCount == 0 || paramsCount == 1,
