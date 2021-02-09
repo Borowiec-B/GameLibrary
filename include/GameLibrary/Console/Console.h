@@ -162,7 +162,7 @@ namespace GameLibrary::Console
 		 *
 		 *								  Current validity checks:
 		 *								 	- Console stores a CommandInfo with cmd's name.
-		 *								 	- Stored CommandInfo's paramsCount is equal to count of arguments held by cmd.
+		 *								 	- Count of args held by cmd matches CommandInfo's paramsCount requirement.
 		 *
 		 */
 		bool commandMatchesRequirements(const Command& cmd) const;
@@ -252,8 +252,7 @@ namespace GameLibrary::Console
 		 *  dispatchCommand(): If contents of cmd are valid, call its listeners.
 		 *
 		 *					   Current validity checks:
-		 *						 - Console stores a CommandInfo with cmd's name.
-		 *						 - Stored CommandInfo's paramsCount is equal to count of arguments held by cmd.
+		 *					     Refer to commandMatchesRequirements().
 		 */
 		void dispatchCommand(Command cmd);
 
