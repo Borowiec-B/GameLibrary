@@ -52,6 +52,9 @@ namespace GameLibrary::Console
 		template<typename F>
 		Event::Dispatcher::Key addCvarListener(String cvarName, F&& func);
 
+		template<typename F>
+		Event::Dispatcher::Key addCommandListener(String cvarName, F&& func);
+
 		/*
 		 *  addMemberCvarListner(): Add member function to Console's list of callbacks called on Cvar change.
 		 */
@@ -290,6 +293,11 @@ namespace GameLibrary::Console
 	template<typename F>
 	Event::Dispatcher::Key ConsoleObject::addCvarListener(String cvarName, F&& func) {
 		return _console.addOwnedCvarListener(_id, std::move(cvarName), std::forward<F>(func));
+	}
+
+	template<typename F>
+	Event::Dispatcher::Key ConsoleObject::addCommandListener(String cmdName, F&& func) {
+		return _console.addOwnedCommandListener(_id, std::move(cmdName), std::forward<F>(func));
 	}
 
 	template<typename T, typename R, typename... Params>
