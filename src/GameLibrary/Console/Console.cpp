@@ -15,12 +15,8 @@ bool Console::commandInfoExists(const String& name) const {
 
 bool Console::commandMatchesRequirements(const Command& cmd) const {
 	if (commandInfoExists(cmd.getName()))
-	{
-		const auto& commandInfo = _commandInfos.at(cmd.getName());
+		return _commandInfos.at(cmd.getName()).countMatchesParamsCount(cmd.getArgs().size());
 
-		if (std::holds_alternative<std::size_t>(commandInfo.paramsCount) && std::get<std::size_t>(commandInfo.paramsCount) == cmd.getArgs().size())
-			return true;
-	}
 	return false;
 }
 
