@@ -283,14 +283,14 @@ namespace GameLibrary::Console
 		return _console.addOwnedCvarListener(_id, std::move(cvarName), Utilities::bindMemberFunction(static_cast<T*>(this), method));
 	}
 
-//	template<typename T, typename R, typename... Params>
-//	Event::Dispatcher::Key ConsoleObject::addMemberCommandListener(String cmdName, R(T::*method)(Params...)) {
-//		constexpr auto paramsCount = sizeof...(Params);
-//
-//		static_assert(paramsCount == 0 || paramsCount == 1,
-//				"ConsoleObject::addMemberCommandListener() failed: Command listener must take 0 or 1 (event) argument.");
-//
-//		return _console.addOwnedCommandListener(_id, std::move(cmdName), Utilities::bindMemberFunction(static_cast<T*>(this), method));
-//	}
+	template<typename T, typename R, typename... Params>
+	Event::Dispatcher::Key ConsoleObject::addMemberCommandListener(String cmdName, R(T::*method)(Params...)) {
+		constexpr auto paramsCount = sizeof...(Params);
+
+		static_assert(paramsCount == 0 || paramsCount == 1,
+				"ConsoleObject::addMemberCommandListener() failed: Command listener must take 0 or 1 (event) argument.");
+
+		return _console.addOwnedCommandListener(_id, std::move(cmdName), Utilities::bindMemberFunction(static_cast<T*>(this), method));
+	}
 }
 
