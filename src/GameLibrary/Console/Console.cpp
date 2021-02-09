@@ -14,7 +14,14 @@ bool Console::commandInfoExists(const String& name) const {
 }
 
 bool Console::commandMatchesRequirements(const Command& cmd) const {
-	return (commandInfoExists(cmd.getName())) && (cmd.getArgs().size() == _commandInfos.at(cmd.getName()).paramsCount);
+	if (commandInfoExists(cmd.getName()))
+	{
+		const auto& commandInfo = _commandInfos.at(cmd.getName());
+
+		if (std::holds_alternative<std::size_t>(commandInfo.paramsCount) && std::get<std::size_t>(commandInfo.paramsCount) == cmd.getArgs().size())
+			return true;
+	}
+	return false;
 }
 
 const Cvar& Console::getCvar(const String& name) {

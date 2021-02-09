@@ -5,7 +5,29 @@
 
 namespace GameLibrary::Console
 {
-	CommandInfo::CommandInfo(String name, std::size_t paramsCount, String description) : name(name), paramsCount(paramsCount), description(description) {}
+	CommandInfo::CommandInfo(String name, const ParamsCount paramsCount, String description)
+								: name(std::move(name)), paramsCount(paramsCount), description(std::move(description)) {}
+
+	CommandInfo::CommandInfo(String name, const std::size_t paramsCount, String description)
+								: name(std::move(name)), paramsCount(paramsCount), description(std::move(description)) {}
+
+	bool CommandInfo::countMatchesParamsCount(const std::size_t count) const {
+		if (std::holds_alternative<std::size_t>(paramsCount))
+		{
+			return std::get<std::size_t>(paramsCount) == count;
+		}
+		else if (std::holds_alternative<ParamsCount>(paramsCount))
+		{
+			const auto specialParamsCount = std::get<ParamsCount>(paramsCount);
+			
+			if (specialParamsCount == ParamsCount::Any)
+				return true;
+			else if (specialParamsCount == ParamsCount::ConcatenateArgs)
+				return (count == 1);
+		}
+
+		return false;
+	}
 
 	Command::Command(const String& stringToParse) {
 		const auto nameDelimiters = Utilities::getNthWord(std::cbegin(stringToParse), std::cend(stringToParse), 0, Utilities::isWhitespace<String::value_type>);

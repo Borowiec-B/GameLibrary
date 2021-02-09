@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <variant>
 #include <vector>
 
 #include "GameLibrary/Console/Types.h"
@@ -14,10 +15,17 @@ namespace GameLibrary::Console
 	 *				 To be used by Console in a list storing all registered Commands.
 	 */
 	struct CommandInfo {
-		CommandInfo(String name, std::size_t paramsCount, String description = "");
+		enum class ParamsCount {
+			Any,
+			ConcatenateArgs
+		};
+		CommandInfo(String name, const ParamsCount paramsCount, String description = "");
+		CommandInfo(String name, const std::size_t paramsCount, String description = "");
+
+		bool countMatchesParamsCount(const std::size_t count) const;
 
 		String name;
-		std::size_t paramsCount;
+		std::variant<ParamsCount, std::size_t> paramsCount;
 		String description;
 	};
 
