@@ -43,7 +43,7 @@ namespace GameLibrary::Console
 		class Value {
 			using ValueType = VT;
 
-			constexpr static auto _floatPrecision = Utilities::Conversions::FloatPrecision(4);
+			constexpr static auto _floatToStringPrecision = Utilities::Conversions::FloatPrecision(4);
 		public:
 			template<typename T>
 			Value(T&& initialValue) {
@@ -65,7 +65,7 @@ namespace GameLibrary::Console
 			template<typename T>
 			void set(T&& newValue) {
 				try {
-					_value = Utilities::Conversions::arithmeticOrStringCast<ValueType>(std::forward<T>(newValue), _floatPrecision);
+					_value = Utilities::Conversions::arithmeticOrStringCast<ValueType>(std::forward<T>(newValue), _floatToStringPrecision);
 				} catch (Exceptions::ConversionError) {
 					throw Exceptions::ConversionError::fromTypes<T, ValueType>("Cvar::Value::set() failed.");
 				}
@@ -82,7 +82,7 @@ namespace GameLibrary::Console
 				try
 				{
 					if constexpr (Utilities::IsArithmeticOrStringV<T>)
-						return Utilities::Conversions::arithmeticOrStringCast<T>(_value, _floatPrecision);
+						return Utilities::Conversions::arithmeticOrStringCast<T>(_value, _floatToStringPrecision);
 					else
 						return T(_value);
 				}
