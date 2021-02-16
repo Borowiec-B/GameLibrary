@@ -29,6 +29,18 @@ namespace GameLibrary::ECS
 			return id;
 		}
 
+		template<typename C>
+		bool entityHasComponent(const Id id) const {
+			const bool componentMapExists = (_components.find(typeid(C)) != std::cend(_components));
+
+			if (!componentMapExists)
+				return false;
+
+			const auto& componentMap = _components.at(typeid(C));
+
+			return (componentMap.find(id) != std::cend(componentMap));
+		}
+
 		bool entityExists(const Id id) const {
 			for (const auto& [_, componentMap] : _components)
 			{

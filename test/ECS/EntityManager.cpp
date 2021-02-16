@@ -32,3 +32,25 @@ TEST_CASE("EntityManager adds / removes entities, and reports their existence.",
 	REQUIRE_FALSE(mgr.entityExists(removedId));
 }
 
+TEST_CASE("EntityManager reports existence of entities' components.")
+{
+	struct PositionComponent : BaseComponent {
+		int x; int y;
+	};
+	struct HealthComponent : BaseComponent {
+		int health;
+	};
+	struct UnusedComponent : BaseComponent {};
+	struct PlayerEntity : BaseEntity<PositionComponent, HealthComponent> {};
+
+	EntityManager mgr;
+
+	const auto id = mgr.addEntity<PlayerEntity>();
+
+	REQUIRE((mgr.entityHasComponent<PositionComponent>(id) && mgr.entityHasComponent<HealthComponent>(id)));
+	REQUIRE_FALSE(mgr.entityHasComponent<UnusedComponent>(id));
+
+	mgr.removeEntity(id);
+	REQUIRE_FALSE((mgr.entityHasComponent<PositionComponent>(id) || mgr.entityHasComponent<HealthComponent>(id)));
+}
+
