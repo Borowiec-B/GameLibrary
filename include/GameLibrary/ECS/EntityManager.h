@@ -66,9 +66,14 @@ namespace GameLibrary::ECS
 		template<typename C>
 		auto& getComponents() {
 			if (_components.find(typeid(C)) != std::cend(_components))
+			{
 				return _components.at(typeid(C));
+			}
 			else
-				return std::map<Id, ComponentPtr>();
+			{
+				static std::map<Id, ComponentPtr> emptyMap;
+				return emptyMap;
+			}
 		}
 
 		void removeEntity(const Id id) {
