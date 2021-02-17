@@ -64,7 +64,7 @@ namespace GameLibrary::ECS
 		}
 
 		template<typename C>
-		const auto& getComponents() {
+		auto& getComponents() {
 			if (_components.find(typeid(C)) != std::cend(_components))
 				return _components.at(typeid(C));
 			else
