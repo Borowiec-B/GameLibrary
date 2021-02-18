@@ -46,7 +46,7 @@ namespace GameLibrary::Event
 				throw Exceptions::OverflowError("Event::Dispatcher::addCallback() failed: Key would overflow.");
 			}
 			
-			AnyCallback callback = AnyCallback::create<E>(std::forward<F>(func), pred);
+			auto callback = AnyCallback::create<E>(std::forward<F>(func), pred);
 
 			const auto insertSuccess = _callbacks[typeid(E)].try_emplace(key, std::move(callback)).second;
 			if (!insertSuccess)
