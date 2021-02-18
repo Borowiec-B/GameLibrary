@@ -66,7 +66,7 @@ namespace GameLibrary::Console
 			void set(T&& newValue) {
 				try {
 					_value = Utilities::Conversions::arithmeticOrStringCast<ValueType>(std::forward<T>(newValue), _floatToStringPrecision);
-				} catch (Exceptions::ConversionError) {
+				} catch (const Exceptions::ConversionError&) {
 					throw Exceptions::ConversionError::fromTypes<T, ValueType>("Cvar::Value::set() failed.");
 				}
 			}
